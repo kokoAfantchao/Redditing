@@ -33,15 +33,15 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:' + butterKnifeVersion
 
     // Dagger dependencies
-    annotationProcessor 'com.google.dagger:dagger-compiler:' + daggerVersion
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation 'com.google.dagger:dagger:' + daggerVersion
     implementation 'com.google.dagger:dagger-android:' + daggerVersion
     implementation 'com.google.dagger:dagger-android-support:' + daggerVersion
     annotationProcessor 'com.google.dagger:dagger-android-processor:' + daggerVersion
+    annotationProcessor 'com.google.dagger:dagger-compiler:' + daggerVersion
 
     //Reddit api  Wrapper dependency
-  //  implementation 'net.dean.jraw:JRAW-Android:1.0.0'
+    implementation 'net.dean.jraw:JRAW-Android:1.0.0'
 
     // Test Dependencies
     testImplementation 'junit:junit:' + jUnitVersion

@@ -7,8 +7,8 @@
               android:orientation="vertical"
               tools:context=".ui.login.LoginActivity">
 
-
     <LinearLayout
+            android:id="@+id/login_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
@@ -37,6 +37,18 @@
                 />
 
 
+
     </LinearLayout>
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:gravity="center_vertical"
+            android:indeterminate="true"
+            style="?android:attr/progressBarStyle"
+    />
+
+
 
 </LinearLayout>

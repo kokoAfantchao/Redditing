@@ -1,5 +1,7 @@
 package com.push.redditing.ui.main;
 
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,9 +20,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.push.redditing.R;
+import com.push.redditing.ui.login.LoginActivity;
+import com.push.redditing.ui.main.SubReddit.SubRedditFragment;
+import com.push.redditing.utils.PreferencesHelper;
+import dagger.Binds;
+import dagger.android.support.DaggerAppCompatActivity;
+import net.dean.jraw.models.Subreddit;
+import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity {
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends DaggerAppCompatActivity implements MainContract.View {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -35,27 +50,32 @@ public class MainActivity extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    @BindView(R.id.container)
+    ViewPager mViewPager;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
+    @Inject
+    MainPresenter mMainPresenter;
+    @Inject
+    PreferencesHelper mPreferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
         // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout.setupWithViewPager(mViewPager);
 
-        TabLayout tabLayout = findViewById(R.id.tabs);
 
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+       // mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+       //tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -63,11 +83,37 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                mMainPresenter.reSetLoader(getSupportLoaderManager());
+
             }
         });
+        startLogingActivity();
 
     }
 
+    private void startLogingActivity() {
+        boolean isOauth = mPreferencesHelper.getBoolean(PreferencesHelper.Key.IS_OAUTH, false);
+//        TODO Don't forget  to  check  the the Oauth before realese
+//        if(!isOauth){
+          Intent  intent = new Intent(this, LoginActivity.class);
+          startActivity(intent);
+//        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMainPresenter.takeView(this);
+     //   startLogingActivity();
+        mMainPresenter.start(getSupportLoaderManager());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+       // mMainPresenter.dropView();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,6 +135,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void showTabs(List<Subreddit> subredditList) {
+        Timber.d(" I am doing swaping here"+subredditList.toString());
+        mSectionsPagerAdapter.swapSubreddits(subredditList);
+    }
+    @Override
+    public void showLoadingIndicator(Boolean aBoolean) {
+
     }
 
     /**
@@ -132,6 +189,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+
+        private List<Subreddit> subreddits = new ArrayList<Subreddit>();
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -140,13 +200,29 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            String fullName = subreddits.get(position).getFullName();
+            return SubRedditFragment.newInstance(fullName);
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            //Timber.d(" this is my subscription ");
+            if(subreddits!= null ) {
+                return subreddits.size();
+            }
+            return 0;
+        }
+
+        public void swapSubreddits(List<Subreddit> subreddits){
+            this.subreddits=subreddits;
+            notifyDataSetChanged();
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return subreddits.get(position).getName();
         }
     }
 }
