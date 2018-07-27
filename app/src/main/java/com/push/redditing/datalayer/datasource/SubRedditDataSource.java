@@ -14,8 +14,8 @@ public interface SubRedditDataSource {
         void onDataNotAvailable();
     }
     interface LoadSubmissionCallback{
-        void onSubmissionLoad(List<Submission> submissionList);
-        void onDataNotAvailable();
+        void onSubmissionLoad(String full_name,List<Submission> submissionList);
+        void onDataNotAvailable(String  full_nameß);
 
 
     }
@@ -26,10 +26,9 @@ public interface SubRedditDataSource {
     *
     *
     * */
-    @Nullable
-    List<Subreddit> getSubreddits();
+    void  getSubreddits( LoadSubredditCallback loadSubredditCallback);
 
-    Integer saveSubReddits(List<Subreddit> subredditList);
+    void saveSubReddits(List<Subreddit> subredditList);
 
 
 
@@ -37,10 +36,11 @@ public interface SubRedditDataSource {
     *
     *
     * */
-    @Nullable
-    List<Submission> getSubmission(@NonNull  String SubReddit_fullname);
 
-    Integer saveSubmission(List<Submission> submissions);
+
+    void getSubmissions(@NonNull  String SubReddit_fullname, LoadSubmissionCallback  loadSubmissionCallback);
+
+    void saveSubmission(List<Submission> submissions);
 
 
 

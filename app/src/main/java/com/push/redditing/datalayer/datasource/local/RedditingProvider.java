@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import com.push.redditing.ui.main.SubReddit.SubRedditContract;
 
 import java.util.ArrayList;
 import java.util.List;

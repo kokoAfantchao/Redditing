@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.push.redditing.datalayer.datasource.SubRedditDataSource;
+import com.push.redditing.utils.AppExecutors;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 
@@ -17,36 +18,34 @@ import java.util.List;
 public class SubRedditLocalDataSource implements SubRedditDataSource {
 
    private ContentResolver  mContentResolver;
-
+  private AppExecutors mAppExecutors;
    @Inject
-   public SubRedditLocalDataSource(ContentResolver  mContentResolver){
+   public SubRedditLocalDataSource(ContentResolver  mContentResolver, AppExecutors executors){
        this.mContentResolver = mContentResolver;
+       this.mAppExecutors = executors;
 
    }
 
 
-    @Nullable
     @Override
-    public List<Subreddit> getSubreddits() {
-        return null;
+    public void getSubreddits(LoadSubredditCallback loadSubredditCallback) {
+
     }
 
     @Override
-    public Integer saveSubReddits(List<Subreddit> subredditList) {
-        return null;
-    }
+    public void saveSubReddits(List<Subreddit> subredditList) {
 
-
-    @Nullable
-    @Override
-    public List<Submission> getSubmission(@NonNull String SubReddit_fullname) {
-        return null;
     }
 
     @Override
-    public Integer saveSubmission(List<Submission> submissions) {
-        return null;
+    public void getSubmissions(@NonNull String SubReddit_fullname, LoadSubmissionCallback loadSubmissionCallback) {
+
     }
 
 
+
+    @Override
+    public void saveSubmission(List<Submission> submissions) {
+
+    }
 }

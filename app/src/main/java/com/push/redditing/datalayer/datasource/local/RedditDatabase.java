@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.push.redditing.datalayer.datasource.local.RedditingProvider.Tables;
-import com.push.redditing.ui.main.SubReddit.SubRedditContract;
 
 
 public class RedditDatabase extends SQLiteOpenHelper {

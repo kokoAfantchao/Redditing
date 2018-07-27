@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class RedditingApplication extends DaggerApplication {
 
-//    for test perpose only
+//    for test purpose only
 //    @Inject
 //    TasksRepository tasksRepository;
 
