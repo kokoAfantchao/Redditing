@@ -13,9 +13,8 @@ public class MainContract {
     interface  View  extends BaseView{
         void showLoadingIndicator( Boolean  aBoolean);
         void showTabs(List<Subreddit> subredditList);
-
         void transferSubmission(String full_name, List<Submission> submissions);
-
+        void showLoginView();
     }
 
     interface LoginView extends  BaseView{

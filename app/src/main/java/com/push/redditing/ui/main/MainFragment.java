@@ -1,8 +1,10 @@
 package com.push.redditing.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,11 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.push.redditing.R;
 import com.push.redditing.di.ActivityScoped;
+import com.push.redditing.ui.Post.PostActivity;
 import com.push.redditing.ui.main.SubReddit.SubRedditFragment;
 import dagger.android.support.DaggerFragment;
 import net.dean.jraw.models.Submission;
@@ -39,7 +44,7 @@ import java.util.Map;
  */
 @ActivityScoped
 public class MainFragment extends DaggerFragment implements  MainContract.View {
-
+    private static final String BUNDLE_SUBREDDIT_LIST = "BUNDLE_SUBREDDIT_LIST";
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     @BindView(R.id.container)
@@ -50,7 +55,17 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     MainPresenter mMainPresenter;
     private Unbinder unbinder;
 
+//     give new pretty  name later
+    public interface  OnOauthRequired{
+          void OnOauthFailed();
+    }
+     private  OnOauthRequired oauthRequired ;
 
+    public void setOauthRequired(OnOauthRequired oauthRequired) {
+        this.oauthRequired = oauthRequired;
+    }
+
+    public List<Subreddit> subreddits = new ArrayList<Subreddit>();
 
 
     @Inject
@@ -61,6 +76,14 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+//            savedInstanceState.getBundle()
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -70,11 +93,20 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         unbinder = ButterKnife.bind(this, view);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
-        // Set up the ViewPager with the sections adapter.
+        //Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mSectionsPagerAdapter);
         tabLayout.setupWithViewPager(mViewPager);
 
       return view ;
+    }
+
+    @OnClick(R.id.new_post_fab)
+    public  void openPostActivity(){
+        final int currentItem = mViewPager.getCurrentItem();
+        Subreddit subreddit = subreddits.get(currentItem);
+        Intent intent = new Intent(getContext(), PostActivity.class);
+        intent.putExtra(PostActivity.SUBREDDIT_NAME_EXTRA, subreddit.getName());
+        startActivity(intent);
     }
 
     @Override
@@ -96,9 +128,7 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     }
 
     @Override
-    public void showLoadingIndicator(Boolean aBoolean) {
-
-    }
+    public void showLoadingIndicator(Boolean aBoolean) { }
 
     @Override
     public void showTabs(List<Subreddit> subredditList) {
@@ -109,12 +139,22 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     @Override
     public void transferSubmission(String full_name, List<Submission> submissions) {
         Timber.d(" transfer befor checking  "+full_name);
-        if( submissions != null ){
-            Timber.d(" transfer after checking  "+full_name);
-            (findFragmentByName(full_name)).setSubmissionList(submissions);
+        if( submissions != null ) {
+            Timber.d(" transfer after checking  " + full_name);
+
+            SubRedditFragment fragmentByName = findFragmentByName(full_name);
+            if (fragmentByName != null) {
+                fragmentByName.setSubmissionList(submissions);
+            }
         }
 
     }
+
+    @Override
+    public void showLoginView() {
+        oauthRequired.OnOauthFailed();
+    }
+
     SubRedditFragment.OnFragmentInteractionListener  callback = new SubRedditFragment.OnFragmentInteractionListener(){
         @Override
         public void onFragmentInteraction(Uri uri) {
@@ -135,10 +175,6 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
         return (SubRedditFragment) registeredFragment;
     }
 
-    @Override
-    public void setPresenter(Object presenter) {
-
-    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -147,7 +183,6 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     public class SectionsPagerAdapter extends FragmentPagerAdapter{
 
 
-        private List<Subreddit> subreddits = new ArrayList<Subreddit>();
         private SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
         private Map<String,Fragment> registerFr = new HashMap<String, Fragment>();
 
@@ -197,18 +232,19 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
             return subRedditFragment;
         }
 
+
         @Override
         public int getCount() {
             // Show 3 total pages.
-            //Timber.d(" this is my subscription ");
+            //Timber.d(" this is my subscription  ");
             if(subreddits!= null ) {
                 return subreddits.size();
             }
             return 0;
         }
 
-        public void swapSubreddits(List<Subreddit> subreddits){
-            this.subreddits=subreddits;
+        public void swapSubreddits(List<Subreddit> subredditList){
+            subreddits=subredditList;
             notifyDataSetChanged();
         }
 
@@ -216,6 +252,11 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
         @Override
         public CharSequence getPageTitle(int position) {
             return subreddits.get(position).getName();
+        }
+
+
+        public List<Subreddit> getSubreddits() {
+            return subreddits;
         }
     }
 }

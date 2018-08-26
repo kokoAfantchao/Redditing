@@ -7,6 +7,6 @@ import java.util.List;
 
 public class Carbonate {
     private Subreddit subreddit;
-    private List<Submission> submission;
-    
+    private List<Submission>  submission;
+
 }

@@ -19,6 +19,7 @@ import butterknife.Unbinder;
 import com.push.redditing.R;
 import com.push.redditing.di.ActivityScoped;
 import com.push.redditing.utils.AppConnectivity;
+import com.push.redditing.utils.PreferencesHelper;
 import dagger.android.support.DaggerFragment;
 
 import javax.inject.Inject;
@@ -46,7 +47,7 @@ public class LoginFragment extends DaggerFragment implements  MainContract.Login
     OnOauthSuccessListener mCallback;
 
     public interface OnOauthSuccessListener {
-        public void OAuthIsSuccess();
+        void OAuthIsSuccess();
     }
 
     @Inject
@@ -118,6 +119,7 @@ public class LoginFragment extends DaggerFragment implements  MainContract.Login
 
     @Override
     public void showMainfragment() {
+      PreferencesHelper.getInstance(getContext()).put(PreferencesHelper.Key.IS_OAUTH, true);
       mCallback.OAuthIsSuccess();
     }
 
@@ -142,10 +144,6 @@ public class LoginFragment extends DaggerFragment implements  MainContract.Login
         return false;
     }
 
-    @Override
-    public void setPresenter(Object presenter) {
-
-    }
 
 
 

@@ -9,10 +9,11 @@ import com.push.redditing.utils.ActivityUtils;
 import com.push.redditing.utils.PreferencesHelper;
 import dagger.Lazy;
 import dagger.android.support.DaggerAppCompatActivity;
+import timber.log.Timber;
 
 import javax.inject.Inject;
 
-public class MainActivity extends DaggerAppCompatActivity implements LoginFragment.OnOauthSuccessListener {
+public class MainActivity extends DaggerAppCompatActivity implements LoginFragment.OnOauthSuccessListener, MainFragment.OnOauthRequired {
 
 
     @Inject
@@ -36,38 +37,42 @@ public class MainActivity extends DaggerAppCompatActivity implements LoginFragme
         if(action.equals(Intent.ACTION_VIEW)){
             mMainPresenter.getOAuthToken( intent.getData().toString().replace("redditing","https"));
         }
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         oAuthCheck();
     }
 
     private void oAuthCheck() {
      boolean isOauth = mPreferencesHelper.getBoolean(PreferencesHelper.Key.IS_OAUTH, false);
-         ///   TODO Don't forget  to  check  the the Oauth before realese
-//         if(!isOauth){
-//             ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),mLoginFragment.get(),
-//                     R.id.fragment_container);
-//         }else {
-//             ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),mMainFragment.get(),
-//                     R.id.fragment_container);
-//
-//         }
-        ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),
-                   mLoginFragment.get().setSetOAuthSuccessListener(this),
-                   R.id.fragment_container);
+//        Timber.d(" the oauth is "+isOauth+" so what so you want me to do +++++++++");
+//         //   TODO Don't forget  to  check  the the Oauth before realese
+         if(!isOauth){
+             ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),mLoginFragment.get(),
+                     R.id.fragment_container);
+         }else {
+             ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),mMainFragment.get(),
+                     R.id.fragment_container);
+
+         }
+//         // Use this code white testing
+//        ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),
+//                   mLoginFragment.get().setSetOAuthSuccessListener(this),
+//                   R.id.fragment_container);
+//        ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),mMainFragment.get(),
+//                   R.id.fragment_container);
     }
 
     @Override
     protected void onResume() {
+        mLoginFragment.get().setSetOAuthSuccessListener(this);
+        mMainFragment.get().setOauthRequired(this);
         super.onResume();
-
     }
+
 
     @Override
     protected void onPause() {
@@ -75,7 +80,7 @@ public class MainActivity extends DaggerAppCompatActivity implements LoginFragme
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu){
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -100,5 +105,10 @@ public class MainActivity extends DaggerAppCompatActivity implements LoginFragme
     public void OAuthIsSuccess() {
         ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),mMainFragment.get(),
                 R.id.fragment_container);
+    }
+
+    @Override
+    public void OnOauthFailed() {
+        ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),mLoginFragment.get(),R.id.fragment_container);
     }
 }

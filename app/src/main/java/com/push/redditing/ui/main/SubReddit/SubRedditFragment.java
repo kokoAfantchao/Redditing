@@ -1,6 +1,7 @@
 package com.push.redditing.ui.main.SubReddit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,11 +16,13 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.push.redditing.R;
+import com.push.redditing.ui.SubmissionDetail.SubmissionActivity;
 import dagger.android.support.DaggerFragment;
 import net.dean.jraw.models.Submission;
 import timber.log.Timber;
 
 import javax.inject.Inject;
+import java.text.DateFormat;
 import java.util.List;
 
 /**
@@ -38,7 +41,7 @@ public class SubRedditFragment extends Fragment {
     // TODO: Rename and change types of parameters
     public String mParam_fullname;
 
-    OnFragmentInteractionListener mListener;
+    public  static OnFragmentInteractionListener mListener;
 
     SubmissionAdapter  submissionAdapter;
     @BindView(R.id.submission_list)
@@ -51,9 +54,20 @@ public class SubRedditFragment extends Fragment {
         submissionAdapter = new SubmissionAdapter(new SubmissionAdapter.SubmisssionItemListener() {
             @Override
             public void onSubmissionItemClick(Submission submission) {
-
+                Intent intent = new Intent(getContext(), SubmissionActivity.class);
+                Bundle  bundle = new Bundle();
+                bundle.putSerializable(SubmissionActivity.SUBMISSION_EXTRA, submission);
+                intent.putExtra(SubmissionActivity.SUBMISSION_BUNDLE,bundle);
+                startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+
     }
 
     /**
@@ -64,7 +78,7 @@ public class SubRedditFragment extends Fragment {
      * @return A new instance of fragment SubRedditFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SubRedditFragment newInstance(String mParam_fullname, OnFragmentInteractionListener mListener) {
+    public static SubRedditFragment newInstance(String mParam_fullname, OnFragmentInteractionListener mListener){
         SubRedditFragment fragment = new SubRedditFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_FULLNAME, mParam_fullname);
@@ -83,14 +97,16 @@ public class SubRedditFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,
-                             Bundle savedInstanceState ) {
+                             Bundle savedInstanceState ){
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sub_reddit, container, false);
         ButterKnife.bind(this, view);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(submissionAdapter);
-        mListener.onFragmentCreate(mParam_fullname);
+        if(mListener != null) {
+            mListener.onFragmentCreate(mParam_fullname);
+        }
         return  view;
     }
 
@@ -122,7 +138,7 @@ public class SubRedditFragment extends Fragment {
 //    }
 
     @Override
-    public void onDetach() {
+    public void onDetach(){
         super.onDetach();
         mListener = null;
     }
@@ -174,9 +190,13 @@ public class SubRedditFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull SubmissionViewHolder holder, int position){
             Submission submission = submissions.get(position);
-
             holder.bindViewData(submission);
-
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onSubmissionItemClick(submission);
+                }
+            });
 
         }
 
@@ -193,6 +213,7 @@ public class SubRedditFragment extends Fragment {
         public  void swapSubmissions(List<Submission> submissions){
             if(submissions!=null && !submissions.isEmpty()){
                 this.submissions=submissions;
+                notifyDataSetChanged();
             }
         }
 
@@ -208,19 +229,41 @@ public class SubRedditFragment extends Fragment {
             @BindView(R.id.comment_count_tv)
             TextView commentView;
 
-            @BindView(R.id.point_count_tv)
-            TextView pointCountView;
+            @BindView(R.id.date_tv)
+            TextView dateView;
 
-            public SubmissionViewHolder(View itemView){
+
+
+            private Context context;
+
+            private Submission mSubmission;
+
+            public SubmissionViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this,itemView);
+                context = itemView.getContext();
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+
+
+                    }
+                });
             }
 
             public void bindViewData(Submission submission){
+                mSubmission = submission;
+                Integer commentCount = submission.getCommentCount();
+                String quantityString = context.getResources().getQuantityString(R.plurals.numberOfComment, commentCount, commentCount);
+                submission.getCreated();
                 titleView.setText(submission.getTitle());
                 authorView.setText(submission.getAuthor());
-                commentView.setText(submission.getCommentCount());
-                //pointCountView.setText(submission.ge);
+                commentView.setText(quantityString);
+                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
+                dateView.setText(dateFormat.format(submission.getCreated()));
+
             }
 
 

@@ -36,6 +36,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife:' + butterKnifeVersion
     implementation 'com.android.support:support-v4:27.1.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:' + butterKnifeVersion
+    implementation 'com.squareup.picasso:picasso:2.71828'
     // Dagger dependencies
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation 'com.google.dagger:dagger:' + daggerVersion
@@ -43,9 +44,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:' + daggerVersion
     annotationProcessor 'com.google.dagger:dagger-android-processor:' + daggerVersion
     annotationProcessor 'com.google.dagger:dagger-compiler:' + daggerVersion
-    //Rx Java
-    implementation 'io.reactivex.rxjava2:rxjava:' + rxjavaVersion
-    implementation 'io.reactivex.rxjava2:rxandroid:' + rxandroidVersion
+
     //Reddit api  Wrapper dependency
     implementation 'net.dean.jraw:JRAW-Android:1.1.0'
     // Test Dependencies

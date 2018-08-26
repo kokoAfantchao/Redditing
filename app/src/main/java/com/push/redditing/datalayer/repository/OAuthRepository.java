@@ -2,7 +2,6 @@ package com.push.redditing.datalayer.repository;
 
 import android.support.annotation.NonNull;
 import com.push.redditing.datalayer.datasource.remote.ApiService;
-import io.reactivex.Flowable;
 import net.dean.jraw.RedditClient;
 
 import javax.inject.Inject;

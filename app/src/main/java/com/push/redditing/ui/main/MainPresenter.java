@@ -53,7 +53,6 @@ final class  MainPresenter  implements  MainContract.Presenter {
     @Override
     public void loadSubreddits(boolean forceLoad ) {
       loadSubreddit(forceLoad,true);
-
     }
 
     @Override
@@ -70,7 +69,6 @@ final class  MainPresenter  implements  MainContract.Presenter {
     public void gernarateOauthUrl() {
         String authorizationUlr =oAuthRepository.getOAuthUrl();
         mLoginView.showWebview(authorizationUlr);
-
     }
 
     @Override
@@ -129,6 +127,11 @@ final class  MainPresenter  implements  MainContract.Presenter {
             @Override
             public void onDataNotAvailable() {
 
+            }
+
+            @Override
+            public void onRedditClientNull() {
+                mMainView.showLoginView();
             }
         });
 

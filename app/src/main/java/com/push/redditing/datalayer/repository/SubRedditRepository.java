@@ -4,13 +4,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.push.redditing.datalayer.datasource.Local;
+import com.push.redditing.datalayer.datasource.Post;
 import com.push.redditing.datalayer.datasource.Remote;
 import com.push.redditing.datalayer.datasource.SubRedditDataSource;
 import com.push.redditing.datalayer.datasource.local.RedditContract;
 import com.push.redditing.datalayer.datasource.local.SubRedditLocalDataSource;
 import com.push.redditing.datalayer.datasource.remote.SubRedditRemoteDataSource;
+import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.tree.CommentNode;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -70,6 +73,11 @@ public class SubRedditRepository  implements SubRedditDataSource{
             public void onDataNotAvailable() {
               getSubredditsFromRemoteDataSource(callback);
             }
+
+            @Override
+            public void onRedditClientNull() {
+
+            }
         });
     }
 
@@ -85,6 +93,11 @@ public class SubRedditRepository  implements SubRedditDataSource{
              @Override
              public void onDataNotAvailable() {
                 callback.onDataNotAvailable();
+             }
+
+             @Override
+             public void onRedditClientNull() {
+                  callback.onRedditClientNull();
              }
          });
 
@@ -166,6 +179,37 @@ public class SubRedditRepository  implements SubRedditDataSource{
 
     @Override
     public void saveSubmission(List<Submission> submissions) {
+
+    }
+
+    @Override
+    public void postSubmission(Post post, PostSubmissionCallback callback) {
+        remoteDataSource.postSubmission(post, new PostSubmissionCallback() {
+            @Override
+            public void onPostSuccess(Submission submission) {
+                callback.onPostSuccess( submission );
+            }
+
+            @Override
+            public void onPostFailed() {
+                callback.onPostFailed();
+            }
+        });
+    }
+
+    @Override
+    public void getComments(String submissionId, LoadCommentCallback callback) {
+        remoteDataSource.getComments(submissionId, new LoadCommentCallback() {
+            @Override
+            public void onCommentsLoad(List<CommentNode<Comment>> comments) {
+                callback.onCommentsLoad(comments);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+             callback.onDataNotAvailable();
+            }
+        });
 
     }
 }

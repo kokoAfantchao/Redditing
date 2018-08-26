@@ -29,4 +29,25 @@
     <string name="label_useless">Continus without Login</string>
     <string name="network_error_msg">Check your network and try again</string>
     <string name="msg_no_connectvity">NO CONNECTIVITY..</string>
+    <string name="title_activity_submission">SubmissionActivity</string>
+    <string name="action_post">Post</string>
+    <string name="post_title_hint">Title</string>
+    <string name="post_content_hint">Content</string>
+    <string name="empty_edit_msg">No Empty Field</string>
+    <string name="post_actionbar_text">SubReddit</string>
+    <string name="send_replay_switch_text">Send Replay</string>
+    <string name="post_failed_msg">Post failed retry again</string>
+
+
+    <plurals name="numberOfPoint">
+        <item quantity="zero">No points </item>
+        <item quantity="one">%d Point</item>
+        <item quantity="other">%d Points</item>
+    </plurals>
+
+    <plurals name="numberOfComment">
+        <item quantity="zero">No comments</item>
+        <item quantity="one">%d Comment</item>
+        <item quantity="other">%d Comments</item>
+    </plurals>
 </resources>

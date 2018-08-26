@@ -40,6 +40,12 @@ public class PreferencesHelper {
 
     }
 
+    public static PreferencesHelper getInstance(Context context) {
+        if ( mPreferencesHelper!= null )
+            return  mPreferencesHelper;
+        return new PreferencesHelper(context);
+    }
+
     PreferencesHelper(Context context) {
         mPref = context.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE);
     }
