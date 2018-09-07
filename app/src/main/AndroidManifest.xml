@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.push.redditing">
+          xmlns:tools="http://schemas.android.com/tools" package="com.push.redditing">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -55,9 +55,35 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.push.redditing.ui.main.MainActivity"/>
         </activity>
-        <activity android:name=".ui.Post.PostActivity"
-          android:parentActivityName=".ui.main.MainActivity"
-          android:launchMode="standard">
+        <activity
+                android:name=".ui.Post.PostActivity"
+                android:launchMode="standard"
+                android:parentActivityName=".ui.main.MainActivity">
+        </activity>
+
+        <receiver android:name=".ui.widget.SubmissionWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="GET_SUBMISSIONS_ACTION"/>
+            </intent-filter>
+
+            <meta-data
+                    android:name="android.appwidget.provider"
+                    android:resource="@xml/new_app_widget_info"/>
+        </receiver>
+        <service android:name=".ui.widget.WidgetService"
+        />
+        <service android:name=".ui.widget.RemoteWidgetServie"
+                 android:permission="android.permission.BIND_REMOTEVIEWS"
+                 android:process=":remote"
+        />
+
+        <activity android:name=".ui.widget.SubmissionWidgetConfigureActivity"
+                  android:theme="@style/WidgetActivity"
+                 >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
         </activity>
     </application>
 

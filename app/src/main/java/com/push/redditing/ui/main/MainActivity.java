@@ -30,6 +30,8 @@ public class MainActivity extends DaggerAppCompatActivity implements LoginFragme
 
 
 
+
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -51,17 +53,15 @@ public class MainActivity extends DaggerAppCompatActivity implements LoginFragme
 //        Timber.d(" the oauth is "+isOauth+" so what so you want me to do +++++++++");
 //         //   TODO Don't forget  to  check  the the Oauth before realese
          if(!isOauth){
-             ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),mLoginFragment.get(),
-                     R.id.fragment_container);
+             ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),
+                   mLoginFragment.get().setSetOAuthSuccessListener(this),
+                   R.id.fragment_container);
          }else {
              ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),mMainFragment.get(),
                      R.id.fragment_container);
-
          }
 //         // Use this code white testing
-//        ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),
-//                   mLoginFragment.get().setSetOAuthSuccessListener(this),
-//                   R.id.fragment_container);
+//
 //        ActivityUtils.replaceFragmenToActivity(getSupportFragmentManager(),mMainFragment.get(),
 //                   R.id.fragment_container);
     }

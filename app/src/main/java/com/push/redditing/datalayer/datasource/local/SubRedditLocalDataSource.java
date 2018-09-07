@@ -1,14 +1,12 @@
 package com.push.redditing.datalayer.datasource.local;
 
-import android.app.Application;
-import android.content.ContentResolver;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import com.google.common.util.concurrent.Runnables;
 import com.push.redditing.datalayer.datasource.Post;
 import com.push.redditing.datalayer.datasource.SubRedditDataSource;
+import com.push.redditing.datalayer.datasource.local.Entities.LSubreddit;
 import com.push.redditing.utils.AppExecutors;
 import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,24 +16,52 @@ import java.util.List;
 @Singleton
 public class SubRedditLocalDataSource implements SubRedditDataSource {
 
-  private ContentResolver  mContentResolver;
   private AppExecutors mAppExecutors;
+  private SubredditDao mSubredditDao;
 
    @Inject
-   public SubRedditLocalDataSource(ContentResolver  mContentResolver, AppExecutors executors){
-       this.mContentResolver = mContentResolver;
+   public SubRedditLocalDataSource(SubredditDao subredditDao ,  AppExecutors executors){
+       this.mSubredditDao = subredditDao;
        this.mAppExecutors = executors;
    }
 
 
     @Override
     public void getSubreddits(LoadSubredditCallback loadSubredditCallback) {
+       Runnable runnable = () -> {
+           List<LSubreddit> subreddits = mSubredditDao.getSubreddits();
+           mAppExecutors.mainThread().execute(new Runnable() {
+               @Override
+               public void run() {
+                   if(subreddits!= null && subreddits.size()>0) loadSubredditCallback.onSubredditLoaded(subreddits);
+                   else loadSubredditCallback.onDataNotAvailable();
+               }
+           });
+       };
+       mAppExecutors.diskIO().execute(runnable);
+    }
+
+    @Override
+    public void saveSubReddits(List<LSubreddit> subredditList) {
+       Runnable runnable = () -> {
+           for (LSubreddit subreddit : subredditList) {
+              mSubredditDao.insertSubreddit(subreddit);
+           }
+       };
+       mAppExecutors.diskIO().execute( runnable);
+
 
     }
 
     @Override
-    public void saveSubReddits(List<Subreddit> subredditList) {
-
+    public void deletAllSubreddits() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                mSubredditDao.deleteAllSubreddits();
+            }
+        };
+        mAppExecutors.diskIO().execute(runnable);
     }
 
     @Override
@@ -57,4 +83,6 @@ public class SubRedditLocalDataSource implements SubRedditDataSource {
    public void getComments(String submissionId, LoadCommentCallback callback) {
 
    }
+
+
 }

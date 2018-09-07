@@ -6,6 +6,7 @@ package com.push.redditing.datalayer.datasource.remote;
 //import net.dean.jraw.oauth.StatefulAuthHelper;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.push.redditing.RedditingApplication;
 import com.push.redditing.datalayer.datasource.Post;
@@ -56,6 +57,7 @@ public class ApiService {
 
     public RedditClient getOAuthtoken(@NotNull String callbackUrl) throws  OAuthException {
         mRedditClient = helper.onUserChallenge(callbackUrl);
+        mAuthManager = mRedditClient.getAuthManager();
         return  mRedditClient;
     }
 
@@ -68,13 +70,16 @@ public class ApiService {
         return  new ArrayList<Subreddit>() ;
     }
     //provide subreddit fullname as paramet
-    public  List<Submission> getSubmission(@NonNull String fullname){
-    Preconditions.checkNotNull(mRedditClient);
-      if(mRedditClient != null ){
-          Listing<Submission> submissionListing = mRedditClient.subreddit(fullname).posts().build().next();
-          return  submissionListing;
-      }
-      return new ArrayList<Submission>();
+    public @Nullable List<Submission> getSubmission(@NonNull String fullname){
+       try {
+           Preconditions.checkNotNull(mRedditClient);
+           Listing<Submission> submissionListing = mRedditClient.subreddit(fullname).posts().build().next();
+           return  submissionListing;
+
+       }catch (NullPointerException e){
+
+           return  null ;
+       }
     }
 
 
@@ -87,7 +92,7 @@ public class ApiService {
         return  null ;
     }
 
-    public  List<CommentNode<Comment>>  getComments(String submissionId){
+    public  List<CommentNode<Comment>>  getComments(@NonNull String submissionId){
         if (mRedditClient!= null ){
             List<CommentNode<Comment>> replies = mRedditClient.submission(submissionId).comments().getReplies();
             return replies;

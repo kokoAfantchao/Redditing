@@ -1,8 +1,12 @@
 package com.push.redditing.datalayer;
 
+import android.app.Application;
+import android.arch.persistence.room.Room;
 import com.push.redditing.datalayer.datasource.Local;
 import com.push.redditing.datalayer.datasource.Remote;
 import com.push.redditing.datalayer.datasource.SubRedditDataSource;
+import com.push.redditing.datalayer.datasource.local.SubredditDao;
+import com.push.redditing.datalayer.datasource.local.RedditingDatabase;
 import com.push.redditing.datalayer.datasource.local.SubRedditLocalDataSource;
 import com.push.redditing.datalayer.datasource.remote.ApiService;
 import com.push.redditing.datalayer.datasource.remote.SubRedditRemoteDataSource;
@@ -40,7 +44,18 @@ abstract public class DataLayerModule {
         return new SubRedditRepository(localDataSource, remoteDataSource);
     }
 
-    ;
+    @Singleton
+    @Provides
+    static RedditingDatabase provideDb(Application context) {
+        return Room.databaseBuilder(context.getApplicationContext(), RedditingDatabase.class, "Tasks.db")
+                .build();
+    }
+    @Singleton
+    @Provides
+    static SubredditDao provideTasksDao(RedditingDatabase db) {
+        return db.subredditDao();
+    }
+
 
 
     @Singleton
@@ -53,7 +68,7 @@ abstract public class DataLayerModule {
     @Provides
     static public  OAuthRepository provideOAuthRepository(ApiService apiService){
         return  new OAuthRepository(apiService);
-    };
+    }
 
     @Singleton
     @Provides

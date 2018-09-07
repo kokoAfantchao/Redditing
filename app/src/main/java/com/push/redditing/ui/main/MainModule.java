@@ -21,4 +21,5 @@ public abstract  class MainModule {
     @ActivityScoped
     @Binds
     abstract MainContract.Presenter MainPrensenter(MainPresenter  presenter);
+
 }

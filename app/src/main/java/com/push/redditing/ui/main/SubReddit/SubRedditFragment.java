@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.push.redditing.R;
+import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
 import com.push.redditing.ui.SubmissionDetail.SubmissionActivity;
 import dagger.android.support.DaggerFragment;
 import net.dean.jraw.models.Submission;
@@ -46,26 +48,30 @@ public class SubRedditFragment extends Fragment {
     SubmissionAdapter  submissionAdapter;
     @BindView(R.id.submission_list)
     RecyclerView  mRecyclerView;
+    @BindView(R.id.submission_swiperefresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+           loadSubmission(true);
+        }
+    };
 
 
 
     public SubRedditFragment() {
         // Required empty public constructor
-        submissionAdapter = new SubmissionAdapter(new SubmissionAdapter.SubmisssionItemListener() {
-            @Override
-            public void onSubmissionItemClick(Submission submission) {
-                Intent intent = new Intent(getContext(), SubmissionActivity.class);
-                Bundle  bundle = new Bundle();
-                bundle.putSerializable(SubmissionActivity.SUBMISSION_EXTRA, submission);
-                intent.putExtra(SubmissionActivity.SUBMISSION_BUNDLE,bundle);
-                startActivity(intent);
-            }
+        submissionAdapter = new SubmissionAdapter(submission -> {
+            Intent intent = new Intent(getContext(), SubmissionActivity.class);
+            Bundle  bundle = new Bundle();
+            bundle.putParcelable(SubmissionActivity.SUBMISSION_EXTRA, submission);
+            intent.putExtra(SubmissionActivity.SUBMISSION_BUNDLE,bundle);
+            startActivity(intent);
         });
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-
         super.onSaveInstanceState(outState);
 
     }
@@ -90,6 +96,7 @@ public class SubRedditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         if (getArguments() != null) {
             mParam_fullname = getArguments().getString(ARG_PARAM_FULLNAME);
         }
@@ -104,9 +111,8 @@ public class SubRedditFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(submissionAdapter);
-        if(mListener != null) {
-            mListener.onFragmentCreate(mParam_fullname);
-        }
+        mSwipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+        loadSubmission(false);
         return  view;
     }
 
@@ -142,7 +148,16 @@ public class SubRedditFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-    public void setSubmissionList( List<Submission> new_data){
+
+    private void loadSubmission(Boolean forceRemoteLoding) {
+        if(mListener != null) {
+            mSwipeRefreshLayout.setRefreshing(true);
+            mListener.onFragmentCreate(mParam_fullname,forceRemoteLoding);
+        }
+
+    }
+    public void setSubmissionList( List<LSubmission> new_data){
+        mSwipeRefreshLayout.setRefreshing(false);
         submissionAdapter.swapSubmissions(new_data);
     }
 
@@ -159,7 +174,7 @@ public class SubRedditFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-        void onFragmentCreate(String full_name);
+        void onFragmentCreate(String full_name,Boolean forceRemoteLaoding);
     }
 
 
@@ -168,9 +183,9 @@ public class SubRedditFragment extends Fragment {
     public  static class SubmissionAdapter extends RecyclerView.Adapter<SubmissionAdapter.SubmissionViewHolder>{
 
         public interface  SubmisssionItemListener{
-            void onSubmissionItemClick(Submission  submission);
+            void onSubmissionItemClick(LSubmission  submission);
         }
-        private  List<Submission> submissions;
+        private  List<LSubmission> submissions;
 
         private SubmisssionItemListener listener;
 
@@ -189,7 +204,7 @@ public class SubRedditFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull SubmissionViewHolder holder, int position){
-            Submission submission = submissions.get(position);
+            LSubmission submission = submissions.get(position);
             holder.bindViewData(submission);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -210,7 +225,7 @@ public class SubRedditFragment extends Fragment {
             return 0;
         }
 
-        public  void swapSubmissions(List<Submission> submissions){
+        public  void swapSubmissions(List<LSubmission> submissions){
             if(submissions!=null && !submissions.isEmpty()){
                 this.submissions=submissions;
                 notifyDataSetChanged();
@@ -236,7 +251,7 @@ public class SubRedditFragment extends Fragment {
 
             private Context context;
 
-            private Submission mSubmission;
+            private LSubmission mSubmission;
 
             public SubmissionViewHolder(View itemView) {
                 super(itemView);
@@ -253,7 +268,7 @@ public class SubRedditFragment extends Fragment {
                 });
             }
 
-            public void bindViewData(Submission submission){
+            public void bindViewData(LSubmission submission){
                 mSubmission = submission;
                 Integer commentCount = submission.getCommentCount();
                 String quantityString = context.getResources().getQuantityString(R.plurals.numberOfComment, commentCount, commentCount);

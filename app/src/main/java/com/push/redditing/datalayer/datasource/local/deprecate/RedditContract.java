@@ -1,4 +1,4 @@
-package com.push.redditing.datalayer.datasource.local;
+package com.push.redditing.datalayer.datasource.local.deprecate;
 
 import android.net.Uri;
 

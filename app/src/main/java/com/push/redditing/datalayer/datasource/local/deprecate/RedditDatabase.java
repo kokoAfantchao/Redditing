@@ -1,9 +1,11 @@
-package com.push.redditing.datalayer.datasource.local;
+package com.push.redditing.datalayer.datasource.local.deprecate;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.push.redditing.datalayer.datasource.local.RedditingProvider.Tables;
+import com.push.redditing.datalayer.datasource.local.deprecate.RedditContract;
+import com.push.redditing.datalayer.datasource.local.deprecate.RedditingProvider;
+import com.push.redditing.datalayer.datasource.local.deprecate.RedditingProvider.Tables;
 
 
 public class RedditDatabase extends SQLiteOpenHelper {

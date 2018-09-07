@@ -5,10 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import com.push.redditing.datalayer.datasource.SubRedditDataSource;
+import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
+import com.push.redditing.datalayer.datasource.local.Entities.LSubreddit;
 import com.push.redditing.datalayer.repository.OAuthRepository;
 import com.push.redditing.datalayer.repository.SubRedditRepository;
 import com.push.redditing.di.ActivityScoped;
-import com.push.redditing.utils.EspressoIdlingResource;
 import com.push.redditing.utils.PreferencesHelper;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Submission;
@@ -80,13 +81,18 @@ final class  MainPresenter  implements  MainContract.Presenter {
     public void loadSubmission(String full_name) {
         mSubRedditRepository.getSubmissions(full_name, new SubRedditDataSource.LoadSubmissionCallback() {
             @Override
-            public void onSubmissionLoad(String full_name, List<Submission> submissionList) {
+            public void onSubmissionLoad(String full_name, List<LSubmission> submissionList) {
                 mMainView.transferSubmission(full_name, submissionList);
             }
 
             @Override
             public void onDataNotAvailable( String s) {
              mMainView.transferSubmission( s, null );
+            }
+
+            @Override
+            public void onRedditClientNull() {
+                mMainView.showLoginView();
             }
         });
     }
@@ -97,27 +103,32 @@ final class  MainPresenter  implements  MainContract.Presenter {
                 mMainView.showLoadingIndicator(true);
             }
         }
-        EspressoIdlingResource.increment();
+        //EspressoIdlingResource.increment();
         mSubRedditRepository.getSubreddits(new SubRedditDataSource.LoadSubredditCallback() {
             @Override
-            public void onSubredditLoaded(List<Subreddit> subredditList) {
-                if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                    EspressoIdlingResource.decrement();
+            public void onSubredditLoaded(List<LSubreddit> subredditList) {
+                // USE THIS CODE WHEN USING ESPRESSO
+                //! !EspressoIdlingResource.getIdlingResource().isIdleNow()
+                   // EspressoIdlingResource.decrement();
                     // Set app as idle.
-                    // The view may not be able to handle UI updates anymore
+
+
+                // The view may not be able to handle UI updates anymore
                     //TODO Create isActive function in  view Interface
-//                    if (mMainView == null || !mMainView.isActive()) {
-//                        return;
-//                    }
+                    if (mMainView == null) {
+
+                        Timber.d(" I am  so sorry this view is null have no reference ");
+                        return;
+                    }
                     if(showLoadIndicatorIU){
                         mMainView.showLoadingIndicator(false);
                     }
                     processSubReddit(subredditList);
-                }
+
 
             }
 
-            private void processSubReddit(List<Subreddit> subredditList) {
+            private void processSubReddit(List<LSubreddit> subredditList) {
 
                 if (mMainView!= null){
                     mMainView.showTabs(subredditList);
@@ -126,6 +137,7 @@ final class  MainPresenter  implements  MainContract.Presenter {
 
             @Override
             public void onDataNotAvailable() {
+
 
             }
 

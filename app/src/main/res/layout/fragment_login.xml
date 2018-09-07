@@ -25,7 +25,7 @@
                 android:layout_height="200dp"
                 android:layout_gravity="center_horizontal"
                 app:srcCompat="@drawable/ic_launcher_foreground"
-        />
+                android:contentDescription="@string/redditing_icon"/>
         <Button
                 android:id="@+id/sign_in_btn"
                 android:layout_width="match_parent"

@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import com.push.redditing.RedditingApplication;
 import com.push.redditing.datalayer.DataLayerModule;
+import com.push.redditing.ui.widget.WidgetModule;
 import com.push.redditing.utils.UtilsModule;
 import dagger.BindsInstance;
 import dagger.Component;
@@ -18,6 +19,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         UtilsModule.class,
         ApplicationModule.class,
         ActivityBindingModule.class,
+        WidgetModule.class,
         AndroidSupportInjectionModule.class})
 public interface AppComponent extends AndroidInjector<RedditingApplication> {
    // TasksRepository getTasksRepository();

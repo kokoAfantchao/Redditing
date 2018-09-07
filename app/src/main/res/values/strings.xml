@@ -37,10 +37,14 @@
     <string name="post_actionbar_text">SubReddit</string>
     <string name="send_replay_switch_text">Send Replay</string>
     <string name="post_failed_msg">Post failed retry again</string>
+    <string name="submission_auther_img">Author profile image</string>
+    <string name="comment_count">Comments Count</string>
+    <string name="redditing_icon">Redditing Icon</string>
+    <string name="submission_thumbnail">Thumbnail for submission</string>
 
 
     <plurals name="numberOfPoint">
-        <item quantity="zero">No points </item>
+        <item quantity="zero">No points</item>
         <item quantity="one">%d Point</item>
         <item quantity="other">%d Points</item>
     </plurals>
@@ -50,4 +54,7 @@
         <item quantity="one">%d Comment</item>
         <item quantity="other">%d Comments</item>
     </plurals>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
 </resources>

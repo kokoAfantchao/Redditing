@@ -20,7 +20,7 @@
  * -Changed package name
  */
 
-package com.push.redditing.datalayer.datasource.local;
+package com.push.redditing.datalayer.datasource.local.deprecate;
 
 import android.content.ContentValues;
 import android.database.Cursor;

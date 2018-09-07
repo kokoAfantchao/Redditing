@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" xmlns:tool="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              tool:context=".ui.widget.SubmissionWidgetConfigureActivity"
+              android:padding="16dp">
+<ListView
+        android:id="@+id/subreddit_wdg_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+</ListView>
+
+</LinearLayout>

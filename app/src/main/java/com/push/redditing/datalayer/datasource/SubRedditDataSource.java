@@ -1,10 +1,11 @@
 package com.push.redditing.datalayer.datasource;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
+import com.push.redditing.datalayer.datasource.local.Entities.LSubreddit;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.tree.CommentNode;
 
 import java.util.List;
@@ -18,10 +19,13 @@ public interface SubRedditDataSource {
     * */
     void  getSubreddits( LoadSubredditCallback loadSubredditCallback);
 
-    void saveSubReddits(List<Subreddit> subredditList);
+    void saveSubReddits(List<LSubreddit> subredditList);
+
+    void deletAllSubreddits();
+
 
     interface LoadSubredditCallback {
-        void onSubredditLoaded(List<Subreddit> subredditList);
+        void onSubredditLoaded(List<LSubreddit> subredditList);
         void onDataNotAvailable();
         void onRedditClientNull();
     }
@@ -37,9 +41,13 @@ public interface SubRedditDataSource {
     void saveSubmission(List<Submission> submissions);
 
 
-    interface LoadSubmissionCallback{
-        void onSubmissionLoad(String full_name,List<Submission> submissionList);
-        void onDataNotAvailable(String  full_nameß);
+    interface LoadSubmissionCallback {
+
+        void onSubmissionLoad(String full_name, List<LSubmission> submissionList);
+
+        void onDataNotAvailable(String full_nameß);
+
+        void onRedditClientNull();
 
     }
 

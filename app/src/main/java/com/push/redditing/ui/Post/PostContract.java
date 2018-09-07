@@ -9,7 +9,6 @@ public class PostContract {
 
     interface View extends BaseView {
         void showPostLoadingIndicator(Boolean isloading);
-
         void OnPostFails();
 
         void OnPostSuccess();

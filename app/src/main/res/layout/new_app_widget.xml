@@ -1,0 +1,44 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" xmlns:tools="http://schemas.android.com/tools"
+                android:padding="@dimen/widget_margin"
+                android:background="#09C">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#bbDEDFDE"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:id="@+id/widget_layout_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+            <TextView
+                    android:id="@+id/subreddit_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="SUbRedditName "
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/cardview_light_background"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:layout_margin="@dimen/spacing_normal"
+                    android:textSize="20sp"/>
+        </LinearLayout>
+
+        <ListView
+                android:id="@+id/submission_widget_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></ListView>
+
+
+
+    </LinearLayout>
+
+</FrameLayout>

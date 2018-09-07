@@ -2,6 +2,7 @@ package com.push.redditing.ui.SubmissionDetail;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.push.redditing.R;
+import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
 import com.push.redditing.di.ActivityScoped;
 import com.squareup.picasso.Picasso;
 import dagger.android.support.DaggerFragment;
@@ -46,13 +48,19 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
     ImageView thumbnailImageView;
 
     CommentAdapter mCommentAdapter;
-    private Submission submission;
+    private LSubmission submission;
 
 
 
 
     @Inject
     public SubmissionFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -68,7 +76,7 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
         return view;
     }
 
-    public void setSubmission(Submission submission) {
+    public void setSubmission(LSubmission submission) {
         this.submission = submission;
     }
 

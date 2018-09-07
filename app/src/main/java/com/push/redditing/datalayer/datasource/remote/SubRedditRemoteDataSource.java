@@ -3,8 +3,11 @@ package com.push.redditing.datalayer.datasource.remote;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.common.util.concurrent.Runnables;
+import com.push.redditing.datalayer.datasource.Carbonate;
 import com.push.redditing.datalayer.datasource.Post;
 import com.push.redditing.datalayer.datasource.SubRedditDataSource;
+import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
+import com.push.redditing.datalayer.datasource.local.Entities.LSubreddit;
 import com.push.redditing.utils.AppExecutors;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Comment;
@@ -37,12 +40,16 @@ public class SubRedditRemoteDataSource implements SubRedditDataSource{
     public void getSubreddits(LoadSubredditCallback loadSubredditCallback) {
         Runnable  runnable = new Runnable() {
             List<Subreddit> subredditList = new ArrayList<>();
+
+
             @Override
             public void run() {
 
                 if(ApiService.getmRedditClient()!= null){
                     subredditList = apiService.getUserSubReddit();
                 }
+
+                List<LSubreddit> lSubredditList = Carbonate.castToLSubreddits(subredditList);
 
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
@@ -52,7 +59,7 @@ public class SubRedditRemoteDataSource implements SubRedditDataSource{
                                loadSubredditCallback.onRedditClientNull();
                         }else{
                             if (!subredditList.isEmpty()) {
-                                loadSubredditCallback.onSubredditLoaded(subredditList);
+                                loadSubredditCallback.onSubredditLoaded(lSubredditList);
                             }else{
                                 loadSubredditCallback.onDataNotAvailable();
                             }
@@ -66,25 +73,28 @@ public class SubRedditRemoteDataSource implements SubRedditDataSource{
     }
 
     @Override
-    public void saveSubReddits(List<Subreddit> subredditList) {
+    public void saveSubReddits(List<LSubreddit> subredditList) {
+    }
+
+    @Override
+    public void deletAllSubreddits() {
 
     }
 
     @Override
     public void getSubmissions(@NonNull String SubReddit_fullname, LoadSubmissionCallback loadSubmissionCallback) {
         Runnable runnable = new Runnable() {
+            List<LSubmission> lSubmissions = new ArrayList<LSubmission>();
             @Override
             public void run() {
                 Timber.d(" getSubmission running in back ground******");
                 List<Submission> submissions = apiService.getSubmission(SubReddit_fullname);
+                if (submissions != null) {  lSubmissions = Carbonate.castToLSubmission(submissions); }
 
-                mAppExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        if (submissions!= null ) loadSubmissionCallback.onSubmissionLoad(SubReddit_fullname, submissions);
-                        else loadSubmissionCallback.onDataNotAvailable(SubReddit_fullname);
-                    }
+                mAppExecutors.mainThread().execute(() -> {
+                    if (submissions!= null ) loadSubmissionCallback.onSubmissionLoad(SubReddit_fullname,lSubmissions);
+                    else if(submissions == null ) loadSubmissionCallback.onRedditClientNull();
+                    else loadSubmissionCallback.onDataNotAvailable(SubReddit_fullname);
                 });
             }
         };
@@ -101,41 +111,34 @@ public class SubRedditRemoteDataSource implements SubRedditDataSource{
 
     @Override
     public void postSubmission(Post post, PostSubmissionCallback callback) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                Submission submission = apiService.postNewSubmission(post);
-                mAppExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (submission != null){
-                            callback.onPostSuccess(submission);
-                        }else {
-                            callback.onPostFailed();
-                        }
+        Runnable runnable = () -> {
+            Submission submission = apiService.postNewSubmission(post);
+
+            mAppExecutors.mainThread().execute( ()-> {
+
+                    if (submission != null){
+                        callback.onPostSuccess(submission);
+                    }else {
+                        callback.onPostFailed();
                     }
-                });
-            }
+            });
         };
         mAppExecutors.networkIO().execute(runnable);
     }
 
     @Override
     public void getComments(String submissionId, LoadCommentCallback callback) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                List<CommentNode<Comment>> comments = apiService.getComments(submissionId);
-                mAppExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (comments!= null ) callback.onCommentsLoad(comments);
-                        else callback.onDataNotAvailable();
-                    }
-                });
+        Runnable runnable = () -> {
+            List<CommentNode<Comment>> comments = apiService.getComments(submissionId);
+            mAppExecutors.mainThread().execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (comments!= null ) callback.onCommentsLoad(comments);
+                    else callback.onDataNotAvailable();
+                }
+            });
 
 
-            }
         };
         mAppExecutors.networkIO().execute(runnable);
     }
