@@ -31,82 +31,82 @@ import java.util.List;
 @Singleton
 public class ApiService {
 
-    private final StatefulAuthHelper helper ;
+    private static RedditClient mRedditClient;
+    private static AuthManager mAuthManager;
+    private final StatefulAuthHelper helper;
     boolean requestRefreshToken = true;
     boolean useMobileSite = true;
-    private static  RedditClient mRedditClient;
-    private static AuthManager mAuthManager;
-    private NetworkAdapter mNetworkAdapter;
-
-
-
-//    identity, edit, flair, history, modconfig, modflair,
+    //    identity, edit, flair, history, modconfig, modflair,
 //    modlog, modposts, modwiki, mysubreddits, privatemessages,
 //    read, report, save, submit, subscribe, vote, wikiedit, wikiread.
     String[] scopes = new String[]{"identity", "edit", "flair", "history", "modconfig", "modflair",
-                                    "modlog", "modposts", "modwiki", "mysubreddits", "privatemessages",
-                                     "read", "report", "save", "submit", "subscribe", "vote", "wikiedit", "wikiread"};
+            "modlog", "modposts", "modwiki", "mysubreddits", "privatemessages",
+            "read", "report", "save", "submit", "subscribe", "vote", "wikiedit", "wikiread"};
+    private NetworkAdapter mNetworkAdapter;
 
-    public ApiService(){
+    public ApiService() {
         helper = RedditingApplication.getAccountHelper().switchToNewUser();
     }
-
-    public  String  getAuthorizationUlr(){
-        return helper.getAuthorizationUrl(requestRefreshToken,useMobileSite,scopes);
-    }
-
-    public RedditClient getOAuthtoken(@NotNull String callbackUrl) throws  OAuthException {
-        mRedditClient = helper.onUserChallenge(callbackUrl);
-        mAuthManager = mRedditClient.getAuthManager();
-        return  mRedditClient;
-    }
-
-    public List<Subreddit>  getUserSubReddit() {
-        if (mRedditClient!= null){
-        BarebonesPaginator<Subreddit> subscriber = mRedditClient.me().subreddits("subscriber").build();
-            return subscriber.accumulateMerged(1);
-
-        }
-        return  new ArrayList<Subreddit>() ;
-    }
-    //provide subreddit fullname as paramet
-    public @Nullable List<Submission> getSubmission(@NonNull String fullname){
-       try {
-           Preconditions.checkNotNull(mRedditClient);
-           Listing<Submission> submissionListing = mRedditClient.subreddit(fullname).posts().build().next();
-           return  submissionListing;
-
-       }catch (NullPointerException e){
-
-           return  null ;
-       }
-    }
-
-
-    public  Submission  postNewSubmission(@NonNull Post post){
-        if (mRedditClient != null ){
-            SubmissionReference submissionReference = mRedditClient.subreddit(post.getFull_name())
-                    .submit(post.getSubmissionKind(), post.getTitle(), post.getContent(), post.getSendReplies());
-            return submissionReference.inspect();
-        }
-        return  null ;
-    }
-
-    public  List<CommentNode<Comment>>  getComments(@NonNull String submissionId){
-        if (mRedditClient!= null ){
-            List<CommentNode<Comment>> replies = mRedditClient.submission(submissionId).comments().getReplies();
-            return replies;
-        }
-         return  null ;
-    }
-
 
     public static RedditClient getmRedditClient() {
         return mRedditClient;
     }
 
+    public String getAuthorizationUlr() {
+        return helper.getAuthorizationUrl(requestRefreshToken, useMobileSite, scopes);
+    }
 
-    public class RedditClientNullException extends  Exception{
+    public RedditClient getOAuthtoken(@NotNull String callbackUrl) throws OAuthException {
+        mRedditClient = helper.onUserChallenge(callbackUrl);
+        mAuthManager = mRedditClient.getAuthManager();
+        return mRedditClient;
+    }
+
+    public List<Subreddit> getUserSubReddit() {
+        if (mRedditClient != null) {
+            BarebonesPaginator<Subreddit> subscriber = mRedditClient.me().subreddits("subscriber").build();
+            if (true) {
+                subscriber = mRedditClient.userSubreddits("popular").build();
+            }
+
+            return subscriber.accumulateMerged(1);
+        }
+
+        return new ArrayList<Subreddit>();
+    }
+
+    //provide subreddit fullname as paramet
+    public @Nullable
+    List<Submission> getSubmission(@NonNull String fullname) {
+        try {
+            Preconditions.checkNotNull(mRedditClient);
+            Listing<Submission> submissionListing = mRedditClient.subreddit(fullname).posts().build().next();
+            return submissionListing;
+
+        } catch (NullPointerException e) {
+
+            return null;
+        }
+    }
+
+    public Submission postNewSubmission(@NonNull Post post) {
+        if (mRedditClient != null) {
+            SubmissionReference submissionReference = mRedditClient.subreddit(post.getFull_name())
+                    .submit(post.getSubmissionKind(), post.getTitle(), post.getContent(), post.getSendReplies());
+            return submissionReference.inspect();
+        }
+        return null;
+    }
+
+    public List<CommentNode<Comment>> getComments(@NonNull String submissionId) {
+        if (mRedditClient != null) {
+            List<CommentNode<Comment>> replies = mRedditClient.submission(submissionId).comments().getReplies();
+            return replies;
+        }
+        return null;
+    }
+
+    public class RedditClientNullException extends Exception {
 
 
     }

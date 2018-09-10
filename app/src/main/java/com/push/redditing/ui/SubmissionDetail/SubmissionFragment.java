@@ -38,8 +38,8 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
     SubmissionPresenter mSubmissionPresenter;
     @BindView(R.id.self_text_tv)
     TextView textViewSubSelfText;
-    @BindView(R.id.fab)
-    FloatingActionButton commentButton;
+//    @BindView(R.id.fab)
+//    FloatingActionButton commentButton;
     @BindView(R.id.recyclerView)
     RecyclerView commentRecyclerView;
     @BindView(R.id.progressBar)
@@ -120,7 +120,7 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
         if (submission.isSelfPost()) {
             thumbnailImageView.setVisibility(View.INVISIBLE);
             textViewSubSelfText.setVisibility(View.VISIBLE);
-            textViewSubSelfText.setText(submission.getSelfText());
+            textViewSubSelfText.setText(submission.getSelfText().trim());
         }else {
             textViewSubSelfText.setVisibility(View.INVISIBLE);
             thumbnailImageView.setVisibility(View.VISIBLE);

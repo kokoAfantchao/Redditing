@@ -131,10 +131,6 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
             subreddits = savedInstanceState.getParcelableArrayList(BUNDLE_SUBREDDIT_LIST);
            curentpager= savedInstanceState.getInt(CURRENT_TAB_EXTRA);
             mSectionsPagerAdapter.swapSubreddits(subreddits);
-            Timber.d("___________________________________++++++++++++++++++++++++++  saving  my view instance to  +++++" +curentpager);
-            Timber.d("___________________________________++++++++++++++++++++++++++  saving  my view instance to  +++++" + mCurrentTab);
-
-
         }
 
         if (subreddits != null && subreddits.size() > 0) {
