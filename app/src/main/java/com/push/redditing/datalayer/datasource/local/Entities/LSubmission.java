@@ -1,6 +1,5 @@
 package com.push.redditing.datalayer.datasource.local.Entities;
 
-import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 

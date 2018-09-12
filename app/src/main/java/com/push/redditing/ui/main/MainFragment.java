@@ -1,26 +1,19 @@
 package com.push.redditing.ui.main;
 
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.Button;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,8 +25,6 @@ import com.push.redditing.di.ActivityScoped;
 import com.push.redditing.ui.Post.PostActivity;
 import com.push.redditing.ui.main.SubReddit.SubRedditFragment;
 import dagger.android.support.DaggerFragment;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
 import timber.log.Timber;
 
 import javax.inject.Inject;
@@ -192,7 +183,6 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     public void transferSubmission(String full_name, List<LSubmission> submissions) {
         Timber.d(" transfer befor checking  "+full_name);
         if( submissions != null ) {
-
             mCachedSubmission.put(full_name, submissions);
             Timber.d(" transfer after checking  " + full_name);
             SubRedditFragment fragmentByName = findFragmentByName(full_name);

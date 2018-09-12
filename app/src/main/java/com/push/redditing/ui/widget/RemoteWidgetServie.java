@@ -3,7 +3,6 @@ package com.push.redditing.ui.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import timber.log.Timber;

@@ -8,15 +8,16 @@ import com.push.redditing.datalayer.datasource.Remote;
 import com.push.redditing.datalayer.datasource.SubRedditDataSource;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubreddit;
-import com.push.redditing.datalayer.datasource.local.SubRedditLocalDataSource;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.tree.CommentNode;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Singleton

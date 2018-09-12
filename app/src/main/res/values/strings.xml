@@ -36,7 +36,7 @@
     <string name="empty_edit_msg">No Empty Field</string>
     <string name="post_actionbar_text">SubReddit</string>
     <string name="send_replay_switch_text">Send Replay</string>
-    <string name="post_failed_msg">Post failed retry again</string>
+    <string name="post_failed_msg">Post failed, try to subscribe to the subreddite before you post </string>
     <string name="submission_auther_img">Author profile image</string>
     <string name="comment_count">Comments Count</string>
     <string name="redditing_icon">Redditing Icon</string>

@@ -1,10 +1,10 @@
 package com.push.redditing.di;
 
 
+import javax.inject.Scope;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import javax.inject.Scope;
 
 @Documented
 @Scope

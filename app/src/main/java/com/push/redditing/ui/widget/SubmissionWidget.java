@@ -7,11 +7,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 import com.push.redditing.R;
-import net.dean.jraw.models.Submission;
-import timber.log.Timber;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

@@ -1,7 +1,6 @@
 package com.push.redditing.datalayer.datasource.local;
 
 import android.support.annotation.NonNull;
-import com.google.common.util.concurrent.Runnables;
 import com.push.redditing.datalayer.datasource.Post;
 import com.push.redditing.datalayer.datasource.SubRedditDataSource;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubreddit;

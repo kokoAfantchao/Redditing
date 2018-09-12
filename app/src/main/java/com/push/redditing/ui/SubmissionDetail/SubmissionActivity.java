@@ -1,20 +1,14 @@
 package com.push.redditing.ui.SubmissionDetail;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import com.push.redditing.R;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
 import com.push.redditing.utils.ActivityUtils;
 import dagger.Lazy;
 import dagger.android.support.DaggerAppCompatActivity;
-import net.dean.jraw.models.Submission;
 
 import javax.inject.Inject;
-import java.io.Serializable;
 
 public class SubmissionActivity extends DaggerAppCompatActivity{
 

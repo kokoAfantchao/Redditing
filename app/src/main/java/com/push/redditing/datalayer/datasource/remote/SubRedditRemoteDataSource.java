@@ -1,15 +1,12 @@
 package com.push.redditing.datalayer.datasource.remote;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.google.common.util.concurrent.Runnables;
 import com.push.redditing.datalayer.datasource.Carbonate;
 import com.push.redditing.datalayer.datasource.Post;
 import com.push.redditing.datalayer.datasource.SubRedditDataSource;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubreddit;
 import com.push.redditing.utils.AppExecutors;
-import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
@@ -20,7 +17,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.RunnableFuture;
 
 
 @Singleton
@@ -111,11 +107,9 @@ public class SubRedditRemoteDataSource implements SubRedditDataSource{
 
     @Override
     public void postSubmission(Post post, PostSubmissionCallback callback) {
-        Runnable runnable = () -> {
-            Submission submission = apiService.postNewSubmission(post);
-
+        Runnable runnable = () ->{
+            Submission submission  = apiService.postNewSubmission(post);
             mAppExecutors.mainThread().execute( ()-> {
-
                     if (submission != null){
                         callback.onPostSuccess(submission);
                     }else {

@@ -3,7 +3,6 @@ package com.push.redditing.ui.SubmissionDetail;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,12 +19,10 @@ import com.push.redditing.di.ActivityScoped;
 import com.squareup.picasso.Picasso;
 import dagger.android.support.DaggerFragment;
 import net.dean.jraw.models.Comment;
-import net.dean.jraw.models.Submission;
 import net.dean.jraw.tree.CommentNode;
 import timber.log.Timber;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

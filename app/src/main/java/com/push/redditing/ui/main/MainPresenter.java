@@ -12,7 +12,6 @@ import com.push.redditing.datalayer.repository.SubRedditRepository;
 import com.push.redditing.di.ActivityScoped;
 import com.push.redditing.utils.PreferencesHelper;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.oauth.OAuthException;
 import timber.log.Timber;

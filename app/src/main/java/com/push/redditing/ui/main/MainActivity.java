@@ -9,7 +9,6 @@ import com.push.redditing.utils.ActivityUtils;
 import com.push.redditing.utils.PreferencesHelper;
 import dagger.Lazy;
 import dagger.android.support.DaggerAppCompatActivity;
-import timber.log.Timber;
 
 import javax.inject.Inject;
 

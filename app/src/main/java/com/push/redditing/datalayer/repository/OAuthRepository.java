@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 import com.push.redditing.datalayer.datasource.remote.ApiService;
 import net.dean.jraw.RedditClient;
 
-import javax.inject.Inject;
-
 public class OAuthRepository {
 
     ApiService apiService;

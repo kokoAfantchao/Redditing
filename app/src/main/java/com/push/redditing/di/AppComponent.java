@@ -1,9 +1,6 @@
 package com.push.redditing.di;
 
 import android.app.Application;
-
-import javax.inject.Singleton;
-
 import com.push.redditing.RedditingApplication;
 import com.push.redditing.datalayer.DataLayerModule;
 import com.push.redditing.ui.widget.WidgetModule;
@@ -12,6 +9,8 @@ import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
+
+import javax.inject.Singleton;
 
 @Singleton
 @Component(modules = {

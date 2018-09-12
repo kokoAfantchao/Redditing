@@ -1,17 +1,13 @@
 package com.push.redditing.ui.Post;
 
 import android.net.Uri;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import com.push.redditing.R;
 import com.push.redditing.utils.ActivityUtils;
 import dagger.android.support.DaggerAppCompatActivity;
-import net.dean.jraw.models.Subreddit;
 
 import javax.inject.Inject;
-import java.io.Serializable;
 
 public class PostActivity extends DaggerAppCompatActivity implements PostFragment.OnFragmentInteractionListener{
      final static public  String SUBREDDIT_NAME_EXTRA ="SUBREDDIT_NAME_EXTRA";

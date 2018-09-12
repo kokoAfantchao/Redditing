@@ -3,13 +3,12 @@ package com.push.redditing.ui.Post;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.*;
-
-import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,18 +31,18 @@ import javax.inject.Inject;
 @ActivityScoped
 public class PostFragment extends DaggerFragment implements PostContract.View {
 
+    private static final String TITLE_EXTRAS = "TITLE_EXTRAS";
+    private static final String CONTENT_EXTRAS="CONTENT_EXTRAS";
     private OnFragmentInteractionListener mListener;
     private String subredditName ;
     @BindView(R.id.editText_title)
-    EditText  titleEditText;
+    TextInputEditText titleEditText;
     @BindView(R.id.editText_content)
-    EditText  contentEditText;
+    TextInputEditText contentEditText;
     @BindView(R.id.send_replay_switch)
     Switch sendReplaySwitch;
     @Inject
     PostPresenter mPostPresenter;
-
-
 
 
     @Inject
@@ -75,11 +74,25 @@ public class PostFragment extends DaggerFragment implements PostContract.View {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(TITLE_EXTRAS,titleEditText.getText().toString());
+        outState.putString(CONTENT_EXTRAS,contentEditText.getText().toString());
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_post, container, false);
         ButterKnife.bind(this, view);
+        if (savedInstanceState != null) {
+            String  stringTitle =savedInstanceState.getString(TITLE_EXTRAS);
+            String stringContent = savedInstanceState.getString(CONTENT_EXTRAS);
+            titleEditText.setText(stringTitle);
+            contentEditText.setText(stringContent);
+        }
 
         return view;
     }
@@ -153,7 +166,8 @@ public class PostFragment extends DaggerFragment implements PostContract.View {
 
     @Override
     public void OnPostFails() {
-        Toast.makeText(getContext(), R.string.post_failed_msg, Toast.LENGTH_SHORT);
+        Toast.makeText(getContext(), R.string.post_failed_msg, Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

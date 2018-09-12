@@ -23,6 +23,7 @@ import net.dean.jraw.pagination.BarebonesPaginator;
 import net.dean.jraw.references.SubmissionReference;
 import net.dean.jraw.tree.CommentNode;
 import org.jetbrains.annotations.NotNull;
+import timber.log.Timber;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -91,11 +92,17 @@ public class ApiService {
 
     public Submission postNewSubmission(@NonNull Post post) {
         if (mRedditClient != null) {
-            SubmissionReference submissionReference = mRedditClient.subreddit(post.getFull_name())
-                    .submit(post.getSubmissionKind(), post.getTitle(), post.getContent(), post.getSendReplies());
-            return submissionReference.inspect();
-        }
-        return null;
+            try {
+                SubmissionReference submissionReference = mRedditClient.subreddit(post.getFull_name())
+                        .submit(post.getSubmissionKind(), post.getTitle(), post.getContent(), post.getSendReplies());
+                return submissionReference.inspect();
+
+            }catch (net.dean.jraw.ApiException  e ){
+                return null;
+            }
+            }
+
+        return null ;
     }
 
     public List<CommentNode<Comment>> getComments(@NonNull String submissionId) {

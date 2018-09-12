@@ -1,7 +1,6 @@
 package com.push.redditing.datalayer.datasource;
 
 import android.support.annotation.NonNull;
-
 import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubreddit;
 import net.dean.jraw.models.Comment;
