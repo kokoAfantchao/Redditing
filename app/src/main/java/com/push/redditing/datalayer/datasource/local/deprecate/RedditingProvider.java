@@ -27,7 +27,7 @@ public class RedditingProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-     //   mOpenHelper = new ItemsDatabase(getContext());
+      mOpenHelper = new RedditDatabase(getContext());
         return true;
     }
 
@@ -48,11 +48,11 @@ public class RedditingProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-      //  final SelectionBuilder builder = buildSelection(uri);
-//       // Cursor cursor = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
-//        if (cursor != null) {
-//            cursor.setNotificationUri(getContext().getContentResolver(), uri);
-//        }
+        final SelectionBuilder builder = buildSelection(uri);
+        Cursor cursor = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
+        if (cursor != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         return  null;
     }
 

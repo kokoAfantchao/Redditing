@@ -50,6 +50,8 @@ abstract public class DataLayerModule {
         return Room.databaseBuilder(context.getApplicationContext(), RedditingDatabase.class, "Tasks.db")
                 .build();
     }
+
+
     @Singleton
     @Provides
     static SubredditDao provideTasksDao(RedditingDatabase db) {

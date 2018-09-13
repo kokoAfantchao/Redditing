@@ -9,15 +9,14 @@ public class RedditContract {
     private RedditContract() {
     }
 
-    // Todo put here all subReddit columns here
-    interface SubRedditColumns {
+    //Todo put here all subReddit columns here
+    interface SubRedditColumns{
         String _ID = "_id";
         String FULL_NAME = "full_name";
         String BANNER_IMAGE = "banner_img";
         String DISPLAY_NAME = "display_name";
         String PUBLIC_DESCRIPTION = "public_description";
         String SUBSCRIBERS = "subscribers";
-
     }
 
     public static class SubReddits implements SubRedditColumns {
