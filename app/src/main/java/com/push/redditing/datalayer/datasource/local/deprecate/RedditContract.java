@@ -8,46 +8,23 @@ public class RedditContract {
 
     private RedditContract() {
     }
+
     // Todo put here all subReddit columns here
-    interface SubRedditColumns{
-        String _ID ="_id" ;
-
-        String ACCOUNTS_ACTIVE ="accounts_active";
-
-        String CREATED_UTC = "created_utc'";
-
-        String NAME ="name";
-
-        String KEY_COLOR ="key_color";
-
-        String DISPLAY_NAME  ="display_name";
-
-        String DESCRITION="description";
-
-        String SPOILERS_ENABLED= "spoilers_enabled";
-
-        String SUBMISSION_TYPE ="submission_type";
-
-        String USER_IS_MUTED ="user_is_muted";
-
-        String USER_IS_BANNED ="use_is_banned";
-
-        String USER_IS_MODERATOR ="user_is_moderator";
-
-        String USER_IS_SUBSCRIBER = "user_is_subscriber";
-
-        String USER_FLAIR_TEXT ="user_flair_text";
-
-        String USER_FLAIR_ENABLED_IN_SR = "user_flair_enabled_in_sr";
-
+    interface SubRedditColumns {
+        String _ID = "_id";
+        String FULL_NAME = "full_name";
+        String BANNER_IMAGE = "banner_img";
+        String DISPLAY_NAME = "display_name";
+        String PUBLIC_DESCRIPTION = "public_description";
+        String SUBSCRIBERS = "subscribers";
 
     }
 
-    public static class SubReddits implements SubRedditColumns  {
+    public static class SubReddits implements SubRedditColumns {
         public static final String CONTENT_TYPE = "com.push.redditing.dir/com.push.redditing.subreddits";
         public static final String CONTENT_ITEM_TYPE = "com.push.redditing.item/vnd.com.example.xyzreader.subreddits";
 
-       // public static final String DEFAULT_SORT = PUBLISHED_DATE + " DESC";
+        // public static final String DEFAULT_SORT = PUBLISHED_DATE + " DESC";
 
         /**
          * Matches: /subreddits/
@@ -59,7 +36,7 @@ public class RedditContract {
         /**
          * Matches: /subreddits/[display_name]/
          */
-        public static Uri buildItemUri(String displayName ) {
+        public static Uri buildItemUri(String displayName) {
             return BASE_URI.buildUpon().appendPath("subreddits").appendPath(displayName).build();
         }
 

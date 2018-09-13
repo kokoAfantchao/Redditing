@@ -26,6 +26,7 @@ public class LSubreddit implements Parcelable {
 
     @ColumnInfo(name = "subscribers")
     private Integer subscribers;
+
     public  LSubreddit(){
 
     }

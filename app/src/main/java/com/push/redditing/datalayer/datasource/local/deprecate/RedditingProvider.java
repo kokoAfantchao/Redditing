@@ -18,12 +18,11 @@ public class RedditingProvider extends ContentProvider {
 
     private static UriMatcher buildUriMatcher() {
         // Todo implement later
-//        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-//        final String authority = ItemsContract.CONTENT_AUTHORITY;
-//        matcher.addURI(authority, "items", ITEMS);
-//        matcher.addURI(authority, "items/#", ITEMS__ID);
-//        return matcher;
-        return  null ;
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        final String authority = RedditContract.CONTENT_AUTHORITY;
+        matcher.addURI(authority, "subreddits", SUBREDDITS);
+        matcher.addURI(authority, "subreddits/#", SUBREDDIT_NAME);
+        return matcher;
     }
 
     @Override
@@ -82,14 +81,11 @@ public class RedditingProvider extends ContentProvider {
                 int countInsert = 0;
                 db.beginTransaction();
                 try {
-
                     for (ContentValues contentValue : values) {
                         db.insert(Tables.SUBREDDITS, null, contentValue);
                         countInsert++;
                     }
                     db.setTransactionSuccessful();
-
-
                 } catch (Exception e) {
 
                 } finally {

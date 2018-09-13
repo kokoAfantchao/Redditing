@@ -45,6 +45,7 @@ public class SelectionBuilder {
     /**
      * Reset any internal state, allowing this builder to be recycled.
      */
+
     public SelectionBuilder reset() {
         mTable = null;
         if (mProjectionMap != null) {

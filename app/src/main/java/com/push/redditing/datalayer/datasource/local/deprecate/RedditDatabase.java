@@ -19,20 +19,11 @@ public class RedditDatabase extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE "+Tables.SUBREDDITS + " ("
                 + RedditContract.SubRedditColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + RedditContract.SubRedditColumns.ACCOUNTS_ACTIVE +" TEXT NOT NULL,"
-                + RedditContract.SubRedditColumns. CREATED_UTC  +" TEXT NOT NULL,"
-                + RedditContract.SubRedditColumns. NAME  +" TEXT NOT NULL,"
-                + RedditContract.SubRedditColumns. KEY_COLOR  +" TEXT NOT NULL,"
+                + RedditContract.SubRedditColumns. FULL_NAME  +" TEXT  NOT NULL,"
                 + RedditContract.SubRedditColumns. DISPLAY_NAME  +" TEXT NOT NULL,"
-                + RedditContract.SubRedditColumns. DESCRITION  +" TEXT NOT NULL,"
-                + RedditContract.SubRedditColumns. SPOILERS_ENABLED  +" TEXT NOT NULL,"
-                + RedditContract.SubRedditColumns. SUBMISSION_TYPE  +" TEXT NOT NULL,"
-                + RedditContract.SubRedditColumns. USER_IS_MUTED  +" BOOLEAN NOT NULL,"
-                + RedditContract.SubRedditColumns. USER_IS_BANNED  +" BOOLEAN NOT NULL,"
-                + RedditContract.SubRedditColumns. USER_IS_MODERATOR  +" BOOLEAN NOT NULL,"
-                + RedditContract.SubRedditColumns. USER_IS_SUBSCRIBER  +" BOOLEAN NOT NULL,"
-                + RedditContract.SubRedditColumns. USER_FLAIR_TEXT  +" TEXT NOT NULL,"
-                + RedditContract.SubRedditColumns. USER_FLAIR_ENABLED_IN_SR  +" TEXT NOT NULL"
+                + RedditContract.SubRedditColumns. BANNER_IMAGE  +" TEXT,"
+                + RedditContract.SubRedditColumns. SUBSCRIBERS  +" INTEGER,"
+                + RedditContract.SubRedditColumns. PUBLIC_DESCRIPTION  +"TEXT "
                 +")");
 
 
