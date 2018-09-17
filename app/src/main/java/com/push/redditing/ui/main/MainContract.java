@@ -1,5 +1,7 @@
 package com.push.redditing.ui.main;
 
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import com.push.redditing.BasePresenter;
 import com.push.redditing.BaseView;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
@@ -35,6 +37,8 @@ public class MainContract {
         void loadSubmission(String full_name );
 
         void loadSubreddits(boolean forceLoad);
+
+        void setLoaderManager(LoaderManager loaderManager);
         @Override
         void takeView(View view);
         @Override

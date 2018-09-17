@@ -8,7 +8,7 @@ import com.push.redditing.datalayer.datasource.local.deprecate.RedditingProvider
 
 public class RedditDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "redditing.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public RedditDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -22,11 +22,9 @@ public class RedditDatabase extends SQLiteOpenHelper {
                 + RedditContract.SubRedditColumns. FULL_NAME  +" TEXT  NOT NULL,"
                 + RedditContract.SubRedditColumns. DISPLAY_NAME  +" TEXT NOT NULL,"
                 + RedditContract.SubRedditColumns. BANNER_IMAGE  +" TEXT,"
-                + RedditContract.SubRedditColumns. SUBSCRIBERS  +" INTEGER,"
-                + RedditContract.SubRedditColumns. PUBLIC_DESCRIPTION  +"TEXT "
+                + RedditContract.SubRedditColumns. PUBLIC_DESCRIPTION  +"TEXT,"
+                + RedditContract.SubRedditColumns. SUBSCRIBERS  +" INTEGER"
                 +")");
-
-
     }
 
     @Override

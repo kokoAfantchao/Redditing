@@ -16,12 +16,23 @@ public class SubredditsLoader extends AsyncTaskLoader<List<LSubreddit>>{
 
     private SubRedditRepository mRedditRepository;
     private List<LSubreddit> lSubredditList= null;
+    private SubRedditDataSource.LoadSubredditCallback mLoadSubredditCallback;
 
 
-    @Inject
     public SubredditsLoader(@NonNull Context context, SubRedditRepository mRedditRepository) {
         super(context);
         this.mRedditRepository = mRedditRepository;
+    }
+
+
+    @Override
+    protected void onStartLoading() {
+        if (lSubredditList != null) {
+            deliverResult(lSubredditList);
+        }else {
+            forceLoad();
+        }
+
     }
 
     @Nullable
@@ -31,31 +42,28 @@ public class SubredditsLoader extends AsyncTaskLoader<List<LSubreddit>>{
 
             @Override
             public void onSubredditLoaded(List<LSubreddit> subredditList) {
-                lSubredditList =subredditList;
+                lSubredditList = subredditList;
             }
 
             @Override
             public void onDataNotAvailable() {
+                lSubredditList= null ;
 
             }
 
             @Override
             public void onRedditClientNull() {
-
+                lSubredditList= null;
             }
         });
+
         return  lSubredditList;
     }
 
     @Override
     public void deliverResult(List<LSubreddit> data) {
-        if (isReset()) {
-            return;
-        }
-        if (isStarted()) {
+            lSubredditList = data;
             super.deliverResult(data);
-        }
-
     }
     @Override
     protected void onStopLoading() {

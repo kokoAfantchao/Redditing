@@ -27,7 +27,7 @@ public class RedditingProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-      mOpenHelper = new RedditDatabase(getContext());
+        mOpenHelper = new RedditDatabase(getContext());
         return true;
     }
 
@@ -37,7 +37,7 @@ public class RedditingProvider extends ContentProvider {
         switch (match) {
             case SUBREDDITS:
                 return RedditContract.SubReddits.CONTENT_TYPE;
-            case SUBREDDIT_NAME :
+            case SUBREDDIT_NAME:
                 return RedditContract.SubReddits.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -53,7 +53,7 @@ public class RedditingProvider extends ContentProvider {
         if (cursor != null) {
             cursor.setNotificationUri(getContext().getContentResolver(), uri);
         }
-        return  null;
+        return cursor;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class RedditingProvider extends ContentProvider {
             case SUBREDDITS: {
                 final long _id = db.insertOrThrow(Tables.SUBREDDITS, null, values);
                 getContext().getContentResolver().notifyChange(uri, null);
-                //return ItemsContract.Items.buildItemUri(_id);
+                return RedditContract.SubReddits.buildItemUri(_id);
             }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -100,14 +100,15 @@ public class RedditingProvider extends ContentProvider {
                 return super.bulkInsert(uri, values);
         }
     }
-//todo rewrite later
+
+    //todo rewrite later
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         //final SelectionBuilder builder = buildSelection(uri);
         getContext().getContentResolver().notifyChange(uri, null);
         //return builder.where(selection, selectionArgs).update(db, values);
-      return  0 ;
+        return 0;
     }
 
     //todo rewrite later
@@ -121,7 +122,7 @@ public class RedditingProvider extends ContentProvider {
         return builder.where(selection, selectionArgs).delete(db);
     }
 
-    private SelectionBuilder buildSelection(Uri uri){
+    private SelectionBuilder buildSelection(Uri uri) {
         final SelectionBuilder builder = new SelectionBuilder();
         final int match = sUriMatcher.match(uri);
         return buildSelection(uri, match, builder);

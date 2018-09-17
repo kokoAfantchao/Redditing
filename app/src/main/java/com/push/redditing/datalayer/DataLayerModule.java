@@ -8,6 +8,7 @@ import com.push.redditing.datalayer.datasource.SubRedditDataSource;
 import com.push.redditing.datalayer.datasource.local.RedditingDatabase;
 import com.push.redditing.datalayer.datasource.local.SubRedditLocalDataSource;
 import com.push.redditing.datalayer.datasource.local.SubredditDao;
+import com.push.redditing.datalayer.datasource.local.deprecate.RedditDatabase;
 import com.push.redditing.datalayer.datasource.remote.ApiService;
 import com.push.redditing.datalayer.datasource.remote.SubRedditRemoteDataSource;
 import com.push.redditing.datalayer.repository.OAuthRepository;
@@ -43,6 +44,12 @@ abstract public class DataLayerModule {
                                                                  @Local SubRedditDataSource localDataSource) {
         return new SubRedditRepository(localDataSource, remoteDataSource);
     }
+
+//    @Singleton
+//    @Provides
+//    static RedditDatabase provideRedditDB(Application application){
+//        return new RedditDatabase(application.getApplicationContext());
+//    }
 
     @Singleton
     @Provides

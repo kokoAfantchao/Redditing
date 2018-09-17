@@ -44,6 +44,7 @@ public class MainActivity extends DaggerAppCompatActivity implements LoginFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mMainPresenter.setLoaderManager(getSupportLoaderManager());
         oAuthCheck();
     }
 
@@ -69,6 +70,7 @@ public class MainActivity extends DaggerAppCompatActivity implements LoginFragme
     protected void onResume() {
         mLoginFragment.get().setSetOAuthSuccessListener(this);
         mMainFragment.get().setOauthRequired(this);
+        mMainPresenter.takeView(mMainFragment.get());
         super.onResume();
     }
 

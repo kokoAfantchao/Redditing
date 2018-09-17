@@ -62,8 +62,6 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     private TabLayout.OnTabSelectedListener onTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-            Timber.d("____+++++_____ Postion is changing to ++++>>>"+ mViewPager.getCurrentItem()  );
-            Timber.d("____+++++_____ Postion is changing to ++++>>>"+ tab.getPosition()  );
             mCurrentTab = tab.getPosition();
         }
 
@@ -103,7 +101,7 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(CURRENT_TAB_EXTRA,mCurrentTab);
         outState.putParcelableArrayList(BUNDLE_SUBREDDIT_LIST,subreddits);
-     //   outState.putParcelableArrayList(SUBMISSIONS_EXTRA, mCachedSubmission);
+     //  outState.putParcelableArrayList(SUBMISSIONS_EXTRA, mCachedSubmission);
         super.onSaveInstanceState(outState);
     }
 
@@ -147,8 +145,9 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        tabLayout.addOnTabSelectedListener(onTabSelectedListener);
         mMainPresenter.takeView(this);
+        tabLayout.addOnTabSelectedListener(onTabSelectedListener);
+        mMainPresenter.loadSubreddits(true);
     }
 
     @Override
@@ -170,11 +169,13 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     }
 
     @Override
-    public void showLoadingIndicator(Boolean aBoolean) { }
+    public void showLoadingIndicator(Boolean aBoolean) {
+
+    }
 
     @Override
     public void showTabs(List<LSubreddit> subredditList) {
-        Timber.d("this is where the data is swaping  with size "+ subredditList.size());
+        Timber.d("___++++++xthis is where the data is swaping  with size "+ subredditList.size());
         mSectionsPagerAdapter.swapSubreddits(subredditList);
     }
 
@@ -190,7 +191,6 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
                 fragmentByName.setSubmissionList(submissions);
             }
         }
-
     }
 
     @Override
@@ -232,7 +232,6 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter{
-
 
         private SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
         private Map<String,Fragment> registerFr = new HashMap<String, Fragment>();

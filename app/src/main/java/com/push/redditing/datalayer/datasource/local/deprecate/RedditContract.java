@@ -10,7 +10,7 @@ public class RedditContract {
     }
 
     //Todo put here all subReddit columns here
-    interface SubRedditColumns{
+    interface SubRedditColumns {
         String _ID = "_id";
         String FULL_NAME = "full_name";
         String BANNER_IMAGE = "banner_img";
@@ -33,17 +33,26 @@ public class RedditContract {
         }
 
         /**
-         * Matches: /subreddits/[display_name]/
+         * Matches: /subreddits/[_id]/
          */
-        public static Uri buildItemUri(String displayName) {
-            return BASE_URI.buildUpon().appendPath("subreddits").appendPath(displayName).build();
+        public static Uri buildItemUri(Long  _id) {
+            return BASE_URI.buildUpon().appendPath("subreddits").appendPath(_id.toString()).build();
         }
 
-        /**
-         * Read item ID item detail URI.
-         */
-        public static long getItemId(Uri itemUri) {
-            return Long.parseLong(itemUri.getPathSegments().get(1));
+            /**
+             * Matches: /subreddits/[display_name]/
+             */
+            public static Uri buildItemUri (String displayName){
+                return BASE_URI.buildUpon().appendPath("subreddits").appendPath(displayName).build();
+            }
+
+            /**
+             * Read item ID item detail URI.
+             */
+            public static long getItemId (Uri itemUri){
+                return Long.parseLong(itemUri.getPathSegments().get(1));
+            }
         }
+
+
     }
-}

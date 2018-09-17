@@ -80,11 +80,18 @@
 
         <activity android:name=".ui.widget.SubmissionWidgetConfigureActivity"
                   android:theme="@style/WidgetActivity"
-                 >
+        >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
+
+        <provider android:authorities="com.push.redditing"
+                  android:name=".datalayer.datasource.local.deprecate.RedditingProvider"
+                  android:exported="false"
+        />
+
+
     </application>
 
 </manifest>

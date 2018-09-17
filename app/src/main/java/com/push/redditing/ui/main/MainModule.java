@@ -1,6 +1,8 @@
 package com.push.redditing.ui.main;
 
 
+
+import android.support.v4.app.LoaderManager;
 import com.push.redditing.di.ActivityScoped;
 import com.push.redditing.di.FragmentScoped;
 import dagger.Binds;
@@ -21,5 +23,6 @@ public abstract  class MainModule {
     @ActivityScoped
     @Binds
     abstract MainContract.Presenter MainPrensenter(MainPresenter  presenter);
+
 
 }
