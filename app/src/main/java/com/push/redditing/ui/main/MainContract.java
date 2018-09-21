@@ -1,7 +1,6 @@
 package com.push.redditing.ui.main;
 
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import com.push.redditing.BasePresenter;
 import com.push.redditing.BaseView;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;

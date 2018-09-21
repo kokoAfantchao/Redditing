@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
-
 import android.support.v4.content.Loader;
 import com.push.redditing.datalayer.datasource.SubRedditDataSource;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
@@ -17,15 +16,12 @@ import com.push.redditing.datalayer.repository.OAuthRepository;
 import com.push.redditing.datalayer.repository.SubRedditRepository;
 import com.push.redditing.di.ActivityScoped;
 import com.push.redditing.utils.PreferencesHelper;
-
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.oauth.OAuthException;
-
 import timber.log.Timber;
 
 import javax.inject.Inject;
-
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +86,8 @@ final class MainPresenter implements MainContract.Presenter, LoaderManager.Loade
     @Override
     public void loadSubmission(String full_name) {
         mSubRedditRepository.getSubmissions(full_name, new SubRedditDataSource.LoadSubmissionCallback() {
+
+
             @Override
             public void onSubmissionLoad(String full_name, List<LSubmission> submissionList) {
                 mMainView.transferSubmission(full_name, submissionList);
@@ -102,6 +100,7 @@ final class MainPresenter implements MainContract.Presenter, LoaderManager.Loade
 
             @Override
             public void onRedditClientNull() {
+                Timber.d("+++++++++++++++++++++++++++++++++++++++++++ "+ full_name);
                 mMainView.showLoginView();
             }
         });
@@ -166,7 +165,6 @@ final class MainPresenter implements MainContract.Presenter, LoaderManager.Loade
     @Override
     public void takeView(MainContract.View view) {
         this.mMainView = view;
-       /// loadSubreddits(true);
     }
 
     @Override
@@ -178,7 +176,7 @@ final class MainPresenter implements MainContract.Presenter, LoaderManager.Loade
     @NonNull
     @Override
     public Loader<List<LSubreddit>> onCreateLoader(int id, @Nullable Bundle args) {
-    //    this.mMainView.showLoadingIndicator(true);
+        //this.mMainView.showLoadingIndicator(true);
         return new SubredditsLoader( mContext,mSubRedditRepository);
     }
 
@@ -189,10 +187,9 @@ final class MainPresenter implements MainContract.Presenter, LoaderManager.Loade
         if (data == null) {
 
         }else {
+            Timber.d(" this message has++++++++++++================== "+ data.size());
             mMainView.showTabs(data);
         }
-
-
     }
 
     @Override

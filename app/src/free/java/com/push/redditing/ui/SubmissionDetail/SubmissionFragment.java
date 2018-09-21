@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.google.android.gms.ads.*;
 import com.push.redditing.R;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubmission;
 import com.push.redditing.di.ActivityScoped;
@@ -35,7 +36,7 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
     SubmissionPresenter mSubmissionPresenter;
     @BindView(R.id.self_text_tv)
     TextView textViewSubSelfText;
-//    @BindView(R.id.fab)
+    //    @BindView(R.id.fab)
 //    FloatingActionButton commentButton;
     @BindView(R.id.recyclerView)
     RecyclerView commentRecyclerView;
@@ -43,10 +44,14 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
     ProgressBar progressBar;
     @BindView(R.id.thumbnail_img)
     ImageView thumbnailImageView;
+    @BindView(R.id.adView)
+    AdView mAdView;
+
+
 
     CommentAdapter mCommentAdapter;
     private LSubmission submission;
-
+    private InterstitialAd mInterstitialAd;
 
 
 
@@ -70,8 +75,46 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getContext());
         commentRecyclerView.setLayoutManager(mLayoutManager);
         commentRecyclerView.setAdapter(mCommentAdapter);
+        showAds();
+
+
         return view;
     }
+
+
+    private void  showAds() {
+        MobileAds.initialize(getContext(),
+                "ca-app-pub-3940256099942544~3347511713");
+
+        mInterstitialAd = new InterstitialAd(getContext());
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+
+            }
+
+            @Override
+            public void onAdOpened() {
+
+
+            }
+
+
+
+        });
+
+        // Create an ad request. Check logcat output for the hashed device ID to
+        // get test ads on a physical device. e.g.
+        // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+
+    }
+
 
     public void setSubmission(LSubmission submission) {
         this.submission = submission;
@@ -87,7 +130,7 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mSubmissionPresenter.dropView();
+        //  mSubmissionPresenter.dropView();
     }
 
     @Override
@@ -103,7 +146,7 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
 
     @Override
     public void showCommentsList(List<CommentNode<Comment>> commentNodes) {
-       mCommentAdapter.swapData(commentNodes);
+        mCommentAdapter.swapData(commentNodes);
 
         int size = commentNodes.size();
         Timber.d(" this has  new list of comment of lines " + size);
@@ -118,20 +161,20 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
             thumbnailImageView.setVisibility(View.INVISIBLE);
             textViewSubSelfText.setVisibility(View.VISIBLE);
             textViewSubSelfText.setText(submission.getSelfText().trim());
-        }else {
+        } else {
             textViewSubSelfText.setVisibility(View.INVISIBLE);
             thumbnailImageView.setVisibility(View.VISIBLE);
             if (submission.hasThumbnail()) {
 
                 Picasso.get().load(submission.getUrl()).into(thumbnailImageView);
-                Timber.d(" this will be the url of +++++"+submission.getThumbnail());
+                Timber.d(" this will be the url of +++++" + submission.getThumbnail());
             }
         }
     }
 
 
     class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
-        List<CommentNode<Comment>> commentNodeList ;
+        List<CommentNode<Comment>> commentNodeList;
 
         @NonNull
         @Override
@@ -150,7 +193,7 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
 
         @Override
         public int getItemCount() {
-            if(commentNodeList != null) return commentNodeList.size();
+            if (commentNodeList != null) return commentNodeList.size();
             return 0;
         }
 
@@ -162,7 +205,7 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
 
         }
 
-        class CommentViewHolder extends  RecyclerView.ViewHolder{
+        class CommentViewHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.comment_textView)
             TextView commentTextView;
 
@@ -174,7 +217,7 @@ public class SubmissionFragment extends DaggerFragment implements SubmissionCont
 
             public CommentViewHolder(View itemView) {
                 super(itemView);
-                ButterKnife.bind(this,itemView);
+                ButterKnife.bind(this, itemView);
             }
         }
     }

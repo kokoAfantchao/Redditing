@@ -8,8 +8,6 @@ import com.push.redditing.datalayer.datasource.SubRedditDataSource;
 import com.push.redditing.datalayer.datasource.local.Entities.LSubreddit;
 import com.push.redditing.datalayer.repository.SubRedditRepository;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SubredditsLoader extends AsyncTaskLoader<List<LSubreddit>>{
@@ -38,32 +36,14 @@ public class SubredditsLoader extends AsyncTaskLoader<List<LSubreddit>>{
     @Nullable
     @Override
     public List<LSubreddit> loadInBackground(){
-        mRedditRepository.getSubreddits(new SubRedditDataSource.LoadSubredditCallback() {
-
-            @Override
-            public void onSubredditLoaded(List<LSubreddit> subredditList) {
-                lSubredditList = subredditList;
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-                lSubredditList= null ;
-
-            }
-
-            @Override
-            public void onRedditClientNull() {
-                lSubredditList= null;
-            }
-        });
-
-        return  lSubredditList;
+        lSubredditList = mRedditRepository.getSubreddits();
+        return  lSubredditList ;
     }
 
     @Override
     public void deliverResult(List<LSubreddit> data) {
             lSubredditList = data;
-            super.deliverResult(data);
+        super.deliverResult(data);
     }
     @Override
     protected void onStopLoading() {

@@ -8,7 +8,6 @@ import com.push.redditing.datalayer.datasource.SubRedditDataSource;
 import com.push.redditing.datalayer.datasource.local.RedditingDatabase;
 import com.push.redditing.datalayer.datasource.local.SubRedditLocalDataSource;
 import com.push.redditing.datalayer.datasource.local.SubredditDao;
-import com.push.redditing.datalayer.datasource.local.deprecate.RedditDatabase;
 import com.push.redditing.datalayer.datasource.remote.ApiService;
 import com.push.redditing.datalayer.datasource.remote.SubRedditRemoteDataSource;
 import com.push.redditing.datalayer.repository.OAuthRepository;
@@ -25,7 +24,7 @@ import java.util.concurrent.Executors;
 @Module
 abstract public class DataLayerModule {
 
-    private static final int THREAD_COUNT = 3;
+    private static final int THREAD_COUNT = 4;
 
     @Singleton
     @Binds

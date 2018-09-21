@@ -23,7 +23,6 @@ import net.dean.jraw.pagination.BarebonesPaginator;
 import net.dean.jraw.references.SubmissionReference;
 import net.dean.jraw.tree.CommentNode;
 import org.jetbrains.annotations.NotNull;
-import timber.log.Timber;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -67,7 +66,8 @@ public class ApiService {
         if (mRedditClient != null) {
             BarebonesPaginator<Subreddit> subscriber = mRedditClient.me().subreddits("subscriber").build();
             if (true) {
-                subscriber = mRedditClient.userSubreddits("popular").build();
+//            subscriber = mRedditClient.me().subreddits("subscriber").build();
+            subscriber = mRedditClient.userSubreddits("popular").build();
             }
 
             return subscriber.accumulateMerged(1);
@@ -79,9 +79,11 @@ public class ApiService {
     //provide subreddit fullname as paramet
     public @Nullable
     List<Submission> getSubmission(@NonNull String fullname) {
+
         try {
             Preconditions.checkNotNull(mRedditClient);
             Listing<Submission> submissionListing = mRedditClient.subreddit(fullname).posts().build().next();
+
             return submissionListing;
 
         } catch (NullPointerException e) {
@@ -96,7 +98,6 @@ public class ApiService {
                 SubmissionReference submissionReference = mRedditClient.subreddit(post.getFull_name())
                         .submit(post.getSubmissionKind(), post.getTitle(), post.getContent(), post.getSendReplies());
                 return submissionReference.inspect();
-
             }catch (net.dean.jraw.ApiException  e ){
                 return null;
             }

@@ -55,7 +55,7 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     private  int mCurrentTab;
     Map<String, List<LSubmission>> mCachedSubmission = new HashMap<>();
 
-//     give new pretty  name later
+//  give new pretty  name later
     public ArrayList<LSubreddit> subreddits = new ArrayList<LSubreddit>();
     private  OnOauthRequired oauthRequired ;
 
@@ -93,7 +93,6 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
 
     }
 
@@ -101,7 +100,7 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(CURRENT_TAB_EXTRA,mCurrentTab);
         outState.putParcelableArrayList(BUNDLE_SUBREDDIT_LIST,subreddits);
-     //  outState.putParcelableArrayList(SUBMISSIONS_EXTRA, mCachedSubmission);
+     //   outState.putParcelableArrayList(SUBMISSIONS_EXTRA,);
         super.onSaveInstanceState(outState);
     }
 
@@ -118,16 +117,15 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
         int curentpager ;
         if (savedInstanceState != null) {
             subreddits = savedInstanceState.getParcelableArrayList(BUNDLE_SUBREDDIT_LIST);
-           curentpager= savedInstanceState.getInt(CURRENT_TAB_EXTRA);
+            curentpager= savedInstanceState.getInt(CURRENT_TAB_EXTRA);
             mSectionsPagerAdapter.swapSubreddits(subreddits);
         }
 
         if (subreddits != null && subreddits.size() > 0) {
-
             tabLayout.getTabAt(mCurrentTab).select();
 
         } else {
-            mMainPresenter.loadSubreddits(false);
+
         }
 
         return view ;
@@ -147,7 +145,7 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
         super.onResume();
         mMainPresenter.takeView(this);
         tabLayout.addOnTabSelectedListener(onTabSelectedListener);
-        mMainPresenter.loadSubreddits(true);
+        mMainPresenter.loadSubreddits(false);
     }
 
     @Override
@@ -159,7 +157,6 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMainPresenter.dropView();
     }
 
     @Override
@@ -206,6 +203,8 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
 
         @Override
         public void onFragmentCreate(String full_name, Boolean forceRemoteLoading ) {
+
+            Timber.d("this is le SubredditName I wad looking for +++++++++++++++++"+ full_name);
             if (forceRemoteLoading) {
                 mMainPresenter.loadSubmission(full_name);
             } else{
@@ -285,8 +284,8 @@ public class MainFragment extends DaggerFragment implements  MainContract.View {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            //Timber.d(" this is my subscription  ");
+            //Show 3 total pages.
+            //Timber.d(" this is my subscription ");
             if(subreddits!= null ) {
                 return subreddits.size();
             }

@@ -67,17 +67,44 @@ public class SubRedditLocalDataSource implements SubRedditDataSource {
             if (cursor != null) {
                 cursor.close();
             }
+            if (subreddits.size() > 0) {
+                loadSubredditCallback.onSubredditLoaded(subreddits);
+            } else {
+                loadSubredditCallback.onDataNotAvailable();
+            }
 
-            mAppExecutors.mainThread().execute(new Runnable() {
-                @Override
-                public void run() {
-                    if (subreddits.size() > 0)
-                        loadSubredditCallback.onSubredditLoaded(subreddits);
-                    else loadSubredditCallback.onDataNotAvailable();
-                }
-            });
+//            mAppExecutors.mainThread().execute(() -> {
+//                if (subreddits.size() >0)
+//                    loadSubredditCallback.onSubredditLoaded(subreddits);
+//                else loadSubredditCallback.onDataNotAvailable();
+//            });
         };
         mAppExecutors.diskIO().execute(runnable);
+    }
+
+    @Override
+    public List<LSubreddit> getSubreddits() {
+        List<LSubreddit> subreddits =  new ArrayList<>();
+        try {
+            Cursor cursor = mContentResolver.query(RedditContract.SubReddits.buildDirUri(),
+                    Query.PROJECTION,
+                    null,
+                    null,
+                    null);
+            cursor.moveToFirst();
+            while (cursor.moveToNext()) {
+                LSubreddit lSubreddit = lSubredditValueOf(cursor);
+                subreddits.add(lSubreddit);
+            }
+            if (cursor != null) {
+                cursor.close();
+            }
+        }catch ( Exception e){
+
+            return  null ;
+        }
+
+        return subreddits;
     }
 
     @Override
@@ -94,8 +121,6 @@ public class SubRedditLocalDataSource implements SubRedditDataSource {
 
         };
         mAppExecutors.diskIO().execute(runnable);
-
-
     }
 
     @Override

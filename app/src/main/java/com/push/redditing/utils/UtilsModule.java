@@ -2,7 +2,6 @@ package com.push.redditing.utils;
 
 import android.app.Application;
 import android.content.ContentResolver;
-import android.support.v4.app.LoaderManager;
 import dagger.Module;
 import dagger.Provides;
 

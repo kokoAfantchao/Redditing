@@ -69,6 +69,20 @@ public class SubRedditRemoteDataSource implements SubRedditDataSource{
     }
 
     @Override
+    public List<LSubreddit> getSubreddits() {
+        List<Subreddit> subredditList = new ArrayList<>();
+        if(ApiService.getmRedditClient()!= null){
+            subredditList = apiService.getUserSubReddit();
+        }else {
+            return null;
+        }
+
+        List<LSubreddit> lSubreddit = Carbonate.castToLSubreddits(subredditList);
+
+        return lSubreddit;
+    }
+
+    @Override
     public void saveSubReddits(List<LSubreddit> subredditList) {
     }
 

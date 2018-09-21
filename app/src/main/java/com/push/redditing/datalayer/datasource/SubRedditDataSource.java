@@ -18,6 +18,10 @@ public interface SubRedditDataSource {
     * */
     void  getSubreddits( LoadSubredditCallback loadSubredditCallback);
 
+    List<LSubreddit> getSubreddits();
+
+
+
     void saveSubReddits(List<LSubreddit> subredditList);
 
     void deletAllSubreddits();

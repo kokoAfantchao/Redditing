@@ -93,6 +93,7 @@ public class LoginFragment extends DaggerFragment implements  MainContract.Login
     public void onDestroy() {
         super.onDestroy();
         mainPresenter.dropeLoginView();
+        mainPresenter.dropView();
     }
 
     @Override

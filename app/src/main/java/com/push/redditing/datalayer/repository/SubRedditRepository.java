@@ -21,23 +21,23 @@ import java.util.Map;
 
 
 @Singleton
-public class SubRedditRepository  implements SubRedditDataSource{
+public class SubRedditRepository implements SubRedditDataSource {
 
 
-   private final   SubRedditDataSource localDataSource;
-   private final   SubRedditDataSource remoteDataSource;
+    private final SubRedditDataSource localDataSource;
+    private final SubRedditDataSource remoteDataSource;
 
 
-   Map<String, LSubreddit> mCachedSubreddits;
-   Map<String, List<LSubmission>> mCachedSubmission;
+    Map<String, LSubreddit> mCachedSubreddits;
+    Map<String, List<LSubmission>> mCachedSubmission;
 
-   // this  will be check before loading from Remote or Local Database
-   boolean subredditCacheIsDirty =  false ;
-   boolean submissionCAcheIsDirty = false ;
+    // this  will be check before loading from Remote or Local Database
+    boolean subredditCacheIsDirty = false;
+    boolean submissionCAcheIsDirty = false;
 
     @Inject
-    public  SubRedditRepository( @NonNull @Local SubRedditDataSource localDataSource,
-                                 @NonNull @Remote SubRedditDataSource remoteDataSource ){
+    public SubRedditRepository(@NonNull @Local SubRedditDataSource localDataSource,
+                               @NonNull @Remote SubRedditDataSource remoteDataSource) {
         this.localDataSource = localDataSource;
         this.remoteDataSource = remoteDataSource;
     }
@@ -45,33 +45,77 @@ public class SubRedditRepository  implements SubRedditDataSource{
 
     @Override
     public void getSubreddits(@NonNull LoadSubredditCallback loadSubredditCallback) {
-     Preconditions.checkNotNull(loadSubredditCallback);
-      /*
-      *Respond immediately from cache is exist and not dirty
-      * */
-      if(mCachedSubreddits!= null && !subredditCacheIsDirty){
-          loadSubredditCallback.onSubredditLoaded(new ArrayList<>(mCachedSubreddits.values()));
-          return ;
-      }
-      if(subredditCacheIsDirty){
-          getSubredditsFromRemoteDataSource(loadSubredditCallback);
-      }else{
-          //getSubredditsFromRemoteDataSource(loadSubredditCallback);
-          getSubredditsFromLocalDataSource(loadSubredditCallback);
-      }
+        Preconditions.checkNotNull(loadSubredditCallback);
+        /*
+         *Respond immediately from cache is exist and not dirty
+         * */
+        if (mCachedSubreddits != null && !subredditCacheIsDirty) {
+            loadSubredditCallback.onSubredditLoaded(new ArrayList<>(mCachedSubreddits.values()));
+            return;
+        }
+        if (subredditCacheIsDirty) {
+            getSubredditsFromRemoteDataSource(loadSubredditCallback);
+        } else {
+            //getSubredditsFromRemoteDataSource(loadSubredditCallback);
+            getSubredditsFromLocalDataSource(loadSubredditCallback);
+        }
+    }
+
+    @Override
+    public List<LSubreddit> getSubreddits() {
+        if (mCachedSubreddits != null && !subredditCacheIsDirty) {
+            return new ArrayList<>(mCachedSubreddits.values());
+        }
+        if (subredditCacheIsDirty) {
+            List<LSubreddit> remoteData = getRemoteData();
+            if (remoteData != null) {
+                return remoteData;
+            }
+        }
+        else {
+            List<LSubreddit> localDate = getLocalDate();
+            return localDate;
+
+        }
+        return null;
+    }
+
+    public  List<LSubreddit> getLocalDate(){
+        List<LSubreddit> lSubreddits = new ArrayList<>();
+        lSubreddits = localDataSource.getSubreddits();
+        if (lSubreddits.size() > 0) {
+            return lSubreddits ;
+        } else {
+           lSubreddits = getRemoteData();
+            return lSubreddits;
+        }
     }
 
 
-    private void getSubredditsFromLocalDataSource( final LoadSubredditCallback callback ){
+    public List<LSubreddit>  getRemoteData( ) {
+        List<LSubreddit> subreddits = remoteDataSource.getSubreddits();
+        if (subreddits == null) {
+
+        }else{
+            refresheCache(subreddits);
+            refresheLocaleDataSource(subreddits);
+            return subreddits;
+
+        }
+        return null;
+
+    }
+
+    private void getSubredditsFromLocalDataSource(final LoadSubredditCallback callback) {
         localDataSource.getSubreddits(new LoadSubredditCallback() {
             @Override
             public void onSubredditLoaded(List<LSubreddit> subredditList) {
-              callback.onSubredditLoaded(subredditList);
+                callback.onSubredditLoaded(subredditList);
             }
 
             @Override
             public void onDataNotAvailable() {
-              getSubredditsFromRemoteDataSource(callback);
+                getSubredditsFromRemoteDataSource(callback);
             }
 
             @Override
@@ -81,42 +125,41 @@ public class SubRedditRepository  implements SubRedditDataSource{
         });
     }
 
-    private void getSubredditsFromRemoteDataSource( final LoadSubredditCallback callback) {
-         remoteDataSource.getSubreddits(new LoadSubredditCallback() {
-             @Override
-             public void onSubredditLoaded(List<LSubreddit> subredditList) {
-                 refresheCache( subredditList);
-                 refresheLocaleDataSource(subredditList);
-                 callback.onSubredditLoaded(subredditList);
-             }
+    private void getSubredditsFromRemoteDataSource(final LoadSubredditCallback callback) {
+        remoteDataSource.getSubreddits(new LoadSubredditCallback() {
+            @Override
+            public void onSubredditLoaded(List<LSubreddit> subredditList) {
+                refresheCache(subredditList);
+                refresheLocaleDataSource(subredditList);
+                callback.onSubredditLoaded(subredditList);
+            }
 
-             @Override
-             public void onDataNotAvailable() {
+            @Override
+            public void onDataNotAvailable() {
                 callback.onDataNotAvailable();
-             }
+            }
 
-             @Override
-             public void onRedditClientNull() {
-                  callback.onRedditClientNull();
-             }
-         });
-
+            @Override
+            public void onRedditClientNull() {
+                callback.onRedditClientNull();
+            }
+        });
 
 
     }
 
-    void refresheCache(List<LSubreddit> subredditList){
-        if(mCachedSubreddits== null ){
-            mCachedSubreddits= new LinkedHashMap<>();
+    void refresheCache(List<LSubreddit> subredditList) {
+        if (mCachedSubreddits == null) {
+            mCachedSubreddits = new LinkedHashMap<>();
         }
         mCachedSubreddits.clear();
-        for (LSubreddit subreddit :subredditList){
+        for (LSubreddit subreddit : subredditList) {
             mCachedSubreddits.put(subreddit.getFullName(), subreddit);
         }
     }
 
-    void refresheLocaleDataSource(List<LSubreddit> subredditList){
-      // TODO create  deleteAll and saveAll  methode in {Locale dataSource class }
+    void refresheLocaleDataSource(List<LSubreddit> subredditList) {
+        // TODO create  deleteAll and saveAll  methode in {Locale dataSource class }
         localDataSource.deletAllSubreddits();
         localDataSource.saveSubReddits(subredditList);
     }
@@ -133,20 +176,19 @@ public class SubRedditRepository  implements SubRedditDataSource{
 
     @Override
     public void getSubmissions(@NonNull String subReddit_fullname, LoadSubmissionCallback loadSubmissionCallback) {
-        if( mCachedSubmission != null ) {
+        if (mCachedSubmission != null) {
             if (mCachedSubmission.get(subReddit_fullname) != null && !submissionCAcheIsDirty) {
 
                 loadSubmissionCallback.onSubmissionLoad(subReddit_fullname, mCachedSubmission.get(subReddit_fullname));
                 return;
             }
         }
-        if(submissionCAcheIsDirty){
-            getSubmissionFromRemoteDataSource(subReddit_fullname ,loadSubmissionCallback);
-        }else {
-           // getSubmissionFromLocalDataSource(subReddit_fullname,loadSubmissionCallback);
-            getSubmissionFromRemoteDataSource(subReddit_fullname ,loadSubmissionCallback);
+        if (submissionCAcheIsDirty) {
+            getSubmissionFromRemoteDataSource(subReddit_fullname, loadSubmissionCallback);
+        } else {
+            // getSubmissionFromLocalDataSource(subReddit_fullname,loadSubmissionCallback);
+            getSubmissionFromRemoteDataSource(subReddit_fullname, loadSubmissionCallback);
         }
-
 
 
     }
@@ -155,12 +197,12 @@ public class SubRedditRepository  implements SubRedditDataSource{
         localDataSource.getSubmissions(subReddit_fullname, new LoadSubmissionCallback() {
             @Override
             public void onSubmissionLoad(String full_name, List<LSubmission> submissionList) {
-                loadSubmissionCallback.onSubmissionLoad(full_name,submissionList);
+                loadSubmissionCallback.onSubmissionLoad(full_name, submissionList);
             }
 
             @Override
-            public void onDataNotAvailable(String  s) {
-                getSubmissionFromRemoteDataSource(subReddit_fullname,loadSubmissionCallback);
+            public void onDataNotAvailable(String s) {
+                getSubmissionFromRemoteDataSource(subReddit_fullname, loadSubmissionCallback);
             }
 
             @Override
@@ -171,15 +213,15 @@ public class SubRedditRepository  implements SubRedditDataSource{
 
     }
 
-    private void getSubmissionFromRemoteDataSource(String subReddit_fullname,LoadSubmissionCallback loadSubmissionCallback) {
+    private void getSubmissionFromRemoteDataSource(String subReddit_fullname, LoadSubmissionCallback loadSubmissionCallback) {
         remoteDataSource.getSubmissions(subReddit_fullname, new LoadSubmissionCallback() {
             @Override
             public void onSubmissionLoad(String full_name, List<LSubmission> submissionList) {
-                loadSubmissionCallback.onSubmissionLoad( full_name , submissionList);
+                loadSubmissionCallback.onSubmissionLoad(full_name, submissionList);
             }
 
             @Override
-            public void onDataNotAvailable(String s ) {
+            public void onDataNotAvailable(String s) {
                 loadSubmissionCallback.onDataNotAvailable(s);
             }
 
@@ -201,7 +243,7 @@ public class SubRedditRepository  implements SubRedditDataSource{
         remoteDataSource.postSubmission(post, new PostSubmissionCallback() {
             @Override
             public void onPostSuccess(Submission submission) {
-                callback.onPostSuccess( submission );
+                callback.onPostSuccess(submission);
             }
 
             @Override
@@ -221,9 +263,10 @@ public class SubRedditRepository  implements SubRedditDataSource{
 
             @Override
             public void onDataNotAvailable() {
-             callback.onDataNotAvailable();
+                callback.onDataNotAvailable();
             }
         });
 
     }
+
 }
