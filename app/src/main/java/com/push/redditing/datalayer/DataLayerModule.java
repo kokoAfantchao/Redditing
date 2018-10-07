@@ -41,6 +41,7 @@ abstract public class DataLayerModule {
     @Provides
     static public SubRedditRepository provideSubRedditRepository(@Remote SubRedditDataSource remoteDataSource,
                                                                  @Local SubRedditDataSource localDataSource) {
+        String.
         return new SubRedditRepository(localDataSource, remoteDataSource);
     }
 
