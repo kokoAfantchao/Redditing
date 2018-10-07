@@ -41,7 +41,6 @@
     <string name="comment_count">Comments Count</string>
     <string name="redditing_icon">Redditing Icon</string>
     <string name="submission_thumbnail">Thumbnail for submission</string>
-<s
 
     <plurals name="numberOfPoint">
         <item quantity="zero">No points</item>
