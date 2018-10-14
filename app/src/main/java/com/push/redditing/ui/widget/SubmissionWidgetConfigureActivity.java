@@ -23,7 +23,7 @@ public class SubmissionWidgetConfigureActivity extends Activity {
     private static final String PREFS_NAME = "com.push.redditing.ui.widget.SubmissionWidget";
     private static final String PREF_PREFIX_KEY = "appwidget_";
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    public  ArrayAdapter arrayAdapter;
+     ArrayAdapter<String> arrayAdapter  ;
     public ListView listView;
     Map<String, LSubreddit> lSubredditMap = new HashMap<>();
     CharSequence [] nameList;
@@ -46,7 +46,7 @@ public class SubmissionWidgetConfigureActivity extends Activity {
     };
 
 
-    public SubmissionWidgetConfigureActivity() {
+    public SubmissionWidgetConfigureActivity(){
         super();
     }
 
@@ -77,12 +77,13 @@ public class SubmissionWidgetConfigureActivity extends Activity {
                 ArrayList<LSubreddit> arrayListExtra = intent.getParcelableArrayListExtra(WidgetService.SUBREDDITS_EXTRA);
                 nameList = new CharSequence[arrayListExtra.size()];
                 int i=0;
+                arrayAdapter.clear();
                 for (LSubreddit  lSubreddit:arrayListExtra) {
                     lSubredditMap.put(lSubreddit.getName(), lSubreddit);
                       nameList[i++] = lSubreddit.getName();
+                      arrayAdapter.insert(lSubreddit.getName(),i);
                     }
-                    arrayAdapter.clear();
-                    arrayAdapter.addAll(nameList);
+
                     arrayAdapter.notifyDataSetChanged();
             }
 
